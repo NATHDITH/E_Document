@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace E_Document.Models;
 
@@ -7,17 +8,19 @@ public partial class DocumentDetail
 {
     public string DocNo { get; set; } = null!;
 
-    public DateOnly CreateDate { get; set; }
+    public DateTime CreateDate { get; set; }
 
     public string ProjectName { get; set; } = null!;
 
+
+    [Key]
     public string ProjectCode { get; set; } = null!;
 
-    public DateOnly StartDate { get; set; }
+    public DateTime StartDate { get; set; }
 
-    public DateOnly Projectdate { get; set; }
+    public DateTime Projectdate { get; set; }
 
-    public DateOnly EndDate { get; set; }
+    public DateTime EndDate { get; set; }
 
     public string Location { get; set; } = null!;
 
