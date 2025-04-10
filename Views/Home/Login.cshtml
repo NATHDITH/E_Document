@@ -1,0 +1,25 @@
+﻿@{
+    Layout = null;
+}
+<h2>Login</h2>
+
+@using (Html.BeginForm())
+{
+    <div>
+        <label for="username">ชื่อผู้ใช้:</label>
+        <input type="text" id="username" name="username" />
+    </div>
+
+    <div>
+        <label for="password">รหัสผ่าน:</label>
+        <input type="password" id="password" name="password" />
+    </div>
+
+    <button type="submit">ล็อกอิน</button>
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <p style="color: red;">@ViewBag.ErrorMessage</p>
+}
+
