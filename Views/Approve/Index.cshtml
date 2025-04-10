@@ -1,0 +1,66 @@
+﻿@model List<E_Document.Models.Approval>
+@{
+    Layout = "_Layout";
+    var users = ViewBag.Users as List<E_Document.Models.User>; // ✅ แปลง ViewBag.Users เป็น List<User>
+}
+
+<h1>เอกสารที่ต้องอนุมัติ</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>ชื่อเอกสาร</th>
+            <th>สถานะ</th>
+            <th>ผู้อนุมัติล่าสุด</th> <!-- ✅ เพิ่มคอลัมน์นี้ -->
+            <th>การอนุมัติ</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var approval in Model)
+        {
+            <tr>
+                <td>@approval.Id</td>
+                <td>@approval.Document.FileName</td>  <!-- เอกสารที่เกี่ยวข้อง -->
+                <td>@approval.Status</td>  <!-- สถานะการอนุมัติ -->
+                @{
+                    var user = ViewBag.Users as List<E_Document.Models.User>; // ✅ แปลง ViewBag.Users เป็น List<User>
+                }
+
+                <td>
+                    @if (!string.IsNullOrEmpty(approval.LastApprover) && users != null)
+                    {
+                        if (int.TryParse(approval.LastApprover, out var lastApproverId)) // ✅ แปลงเป็น int
+                        {
+                            var approver = users.FirstOrDefault(u => u.Id == lastApproverId);
+                            if (approver != null)
+                            {
+                                @approver.Username
+                            }
+                            else
+                            {
+                                <span class="text-muted">-</span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="text-danger">ID ไม่ถูกต้อง</span>
+                        }
+                    }
+                    else
+                    {
+                        <span class="text-muted">ยังไม่มี</span>
+                    }
+                </td>
+
+                <td>
+                    @if (approval.Status == "Pending" || approval.Status == "In Review")
+                    {
+                        <a asp-action="Approve" asp-route-id="@approval.Id" class="btn btn-success">อนุมัติ</a>
+                        <a asp-action="Reject" asp-route-id="@approval.Id" class="btn btn-danger">ปฏิเสธ</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
