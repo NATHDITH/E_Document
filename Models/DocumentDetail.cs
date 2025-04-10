@@ -8,7 +8,7 @@ public partial class DocumentDetail
 {
     public string DocNo { get; set; } = null!;
 
-    public DateTime CreateDate { get; set; }
+    public DateTime? CreateDate { get; set; }
 
     public string ProjectName { get; set; } = null!;
 
@@ -16,11 +16,11 @@ public partial class DocumentDetail
     [Key]
     public string ProjectCode { get; set; } = null!;
 
-    public DateTime StartDate { get; set; }
+    public DateTime? StartDate { get; set; }
 
-    public DateTime Projectdate { get; set; }
+    public DateTime? Projectdate { get; set; }
 
-    public DateTime EndDate { get; set; }
+    public DateTime? EndDate { get; set; }
 
     public string Location { get; set; } = null!;
 

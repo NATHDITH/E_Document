@@ -1,0 +1,76 @@
+﻿@model List<E_Document.Models.Document>
+
+@{
+    Layout = "_Layout";
+}
+
+<h1 class="display-4">ส่วนการสร้างเอกสาร</h1>
+<a href="/Create/Principles">สร้างเอกสารขออนุมัติหลักการและวงเงินค่าใช้จ่ายโครงการ</a>
+<br />
+<a href="/Create/Disburse">สร้างเอกสารเบิกจ่าย</a>
+<br />
+<a href="/Create/Activity">สร้างเอกสารชั่วโมงกิจกรรม</a>
+<hr>
+<hr>
+<h1 class="display-4">ระบบรับ-ส่งเอกสาร</h1>
+
+<br>
+
+<!-- 🟢 ฟอร์มอัปโหลดเอกสาร -->
+<h2>อัปโหลดเอกสาร</h2>
+<form asp-action="UploadDocument" asp-controller="Create" method="post" enctype="multipart/form-data">
+    <div>
+        <label>เลือกไฟล์:</label>
+        <input type="file" name="file" class="form-control" required />
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">อัปโหลด</button>
+</form>
+
+<hr>
+<hr>
+<!-- 🟢 แสดงรายการเอกสาร -->
+<h2>รายการเอกสาร</h2>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ชื่อไฟล์</th>
+                <th>สถานะ</th>
+                <th>การดำเนินการ</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var doc in Model)
+            {
+                <tr>
+                    <td>@doc.FileName</td>
+                    <td>@doc.Status</td>
+                    <td>
+                        @if (doc.Status == "Uploaded")
+                        {
+                            <form asp-action="SubmitDocument" asp-controller="Create" method="post">
+                                <input type="hidden" name="documentId" value="@doc.Id" />
+                                <button type="submit" class="btn btn-warning">ส่งขออนุมัติ</button>
+                            </form>
+                        }
+                        else if (doc.Status == "In Review")
+                        {
+                            <span class="text-warning">รอการอนุมัติ</span>
+                        }
+                        else if (doc.Status == "Approved")
+                        {
+                            <span class="text-success">อนุมัติแล้ว</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>ไม่มีเอกสารที่อัปโหลด</p>
+}

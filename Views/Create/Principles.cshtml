@@ -1,0 +1,233 @@
+﻿@{
+    Layout = "_Layout";
+}
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<h2 class="mb-4">สร้างเอกสาร ขออนุมัติหลักการ</h2>
+
+<form method="post" action="/Create/GeneratePrinciplesPdf" class="needs-validation" novalidate accept-charset="UTF-8">
+    <div class="mb-3">
+        <label class="form-label">เลขหนังสือ:</label>
+        <input type="text" name="DocNo" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">วันที่ออกหนังสือ:</label>
+        <input type="date" name="CreateDate" class="form-control" required id="CreateDate" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">ชื่อโครงการ:</label>
+        <input type="text" name="ProjectName" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">รหัสโครงการ:</label>
+        <input type="text" name="ProjectCode" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">วันเริ่มเตรียมโครงการ:</label>
+        <input type="date" name="StartDate" class="form-control" required id="StartDate" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">วันเริ่มโครงการ:</label>
+        <input type="date" name="ProjectDate" class="form-control" required id="ProjectDate   />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">วันสิ้นสุดโครงการ:</label>
+        <input type="date" name="EndDate" class="form-control" required id="EndDate" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">สถานที่โครงการ:</label>
+        <input type="text" name="Location" class="form-control" required />
+    </div>
+
+
+    <h2 class="mb-4">ส่วนการเงิน</h2>
+
+
+    <!-- สำหรับค่าต่างๆ ที่เป็นตัวเลข -->
+    <div class="mb-3">
+        <label class="form-label">จำนวนเงินบำรุง:(บาท)</label>
+        <input type="number" name="Maintenancemoney" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">จำนวนเงินบำรุง:(ตัวอักษร)</label>
+        <input type="text" name="Maintenancemoneytext" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">จำนวนเงินสะสม:(บาท)</label>
+        <input type="number" name="Accumulatedmoney" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">จำนวนเงินสะสม:(ตัวอักษร)</label>
+        <input type="text" name="Accumulatedmoneytext" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">จำนวนเงินอื่นๆ:(บาท)</label>
+        <input type="number" name="Othermoney" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">จำนวนเงินอื่นๆ:(ตัวอักษร)</label>
+        <input type="text" name="Othermoneytext" class="form-control" required />
+    </div>
+
+
+    <h2 class="mb-4">ส่วนชั่วโมงกิจกรรม</h2>
+
+    <!-- สำหรับตัวแปรที่เป็นตัวเลือก (เช่น สำหรับกิจกรรมต่างๆ) -->
+
+    <div class="mb-3">
+        <label class="form-label">กิจกรรมมหาวิทยาลัยผู้จัด:</label>
+        <input type="number" name="1universityactivitiesSt" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">กิจกรรมมหาวิทยาลัยผู้เข้าร่วม:</label>
+        <input type="number" name="1universityactivities" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">กิจกรรมจิตสาธารณะผู้จัด:</label>
+        <input type="number" name="211publicspiritactivitiesSt" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">กิจกรรมจิตสาธารณะผู้เข้าร่วม:</label>
+        <input type="number" name="211publicspiritactivities" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">กิจกรรมอื่น ๆด้านคุณธรรมผู้จัด:</label>
+        <input type="number" name="212moralSt" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">กิจกรรมอื่น ๆด้านคุณธรรมผู้เข้าร่วม:</label>
+        <input type="number" name="212moral" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">ทักษะภาษาต่างประเทศผู้จัด:</label>
+        <input type="number" name="221competencybuildingactivitiesSt" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">ทักษะภาษาต่างประเทศผู้เข้าร่วม:</label>
+        <input type="number" name="221competencybuildingactivities" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">ทักษะไอทีผู้จัด:</label>
+        <input type="number" name="222itskillsSt" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">ทักษะไอทีผู้เข้าร่วม:</label>
+        <input type="number" name="222itskills" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">กิจกรรมอื่น ๆด้านพัฒนาทักษะเสริมสร้างทางการคิดและการเรียนรู้ผู้จัด:</label>
+        <input type="number" name="223developingSt" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">กิจกรรมอื่น ๆด้านพัฒนาทักษะเสริมสร้างทางการคิดและการเรียนรู้ผู้เข้าร่วม:</label>
+        <input type="number" name="223developing" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">การเสริมสร้างทัศนคติประชาธิปไตยผู้จัด:</label>
+        <input type="number" name="231democraticSt" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">การเสริมสร้างทัศนคติประชาธิปไตยผู้เข้าร่วม:</label>
+        <input type="number" name="231democratic" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">กิจกรรมอื่น ๆด้านพัฒนาทักษะเสริมสร้างความสัมพันธ์ระหว่างบุคคลผู้จัด:</label>
+        <input type="number" name="232relationshipsSt" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">กิจกรรมอื่น ๆด้านพัฒนาทักษะเสริมสร้างความสัมพันธ์ระหว่างบุคคลผู้เข้าร่วม:</label>
+        <input type="number" name="232relationships" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">ด้านสุขภาพผู้จัด:</label>
+        <input type="number" name="24healthSt" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">ด้านสุขภาพผู้เข้าร่วม:</label>
+        <input type="number" name="24health" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">กิจกรรมจิตอาสาผู้จัด:</label>
+        <input type="number" name="31volunteerActivitiesSt" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">กิจกรรมจิตอาสาผู้เข้าร่วม:</label>
+        <input type="number" name="31volunteerActivities" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">กิจกรรมเพื่อสังคมอื่น ๆผู้จัด:</label>
+        <input type="number" name="32socialSt" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">กิจกรรมเพื่อสังคมอื่น ๆผู้เข้าร่วม:</label>
+        <input type="number" name="32social" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">สร้าง PDF</button>
+</form>
+
+
+
+<script>
+    function addCharacteristic() {
+        let div = document.createElement("div");
+        div.classList.add("input-group", "mb-2");
+        div.innerHTML = `
+                    <input type="text" name="Projectobjective[]" class="form-control" required />
+                <button type="button" class="btn btn-danger" onclick="this.parentElement.remove()">−</button>
+            `;
+        document.getElementById("objective").appendChild(div);
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let today = new Date().toISOString().split('T')[0];
+        document.getElementById("CreateDate").setAttribute("min", today);
+
+        document.getElementById("CreateDate").addEventListener("change", function () {
+            let CreateDate = this.value;
+            document.getElementById("StartDate").setAttribute("min", CreateDate);
+            document.getElementById("EndDate").setAttribute("min", CreateDate);
+        });
+
+        document.getElementById("StartDate").addEventListener("change", function () {
+            let startDate = this.value;
+            document.getElementById("EndDate").setAttribute("min", startDate);
+        });
+    });
+
+
+</script>
