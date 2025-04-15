@@ -31,30 +31,33 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
 
-
+                        @if (User.IsInRole("Creater"))
+{
                         <li class="nav-item">
 
                             <a class="nav-link text-dark" asp-area="" asp-controller="Create" asp-action="Index">Create</a>
 
                         </li>
 
+}
 
 
 
-
-
-                        <li class="nav-item">
+                        @if (User.IsInRole("Approver"))
+                        {
+                            <li class="nav-item">
 
                             <a class="nav-link text-dark" asp-area="" asp-controller="Approve" asp-action="Index">Approve</a>
 
                         </li>
-
+}
 
 
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
 
+                        
 
 
 

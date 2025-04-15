@@ -53,6 +53,7 @@ namespace E_Document.Controllers
 
 
 
+        
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
@@ -61,16 +62,18 @@ namespace E_Document.Controllers
 
             if (user != null && user.PasswordHash == password)
             {
+                // ??????? Role ???????????? Claims
                 var claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, user.Username),
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Role, user.Role) // ????? Role ????????? Claim
         };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var authProperties = new AuthenticationProperties
                 {
-                    IsPersistent = true // ?? ?????????????? (true = ?????, false = ?????????????????????????????)
+                    IsPersistent = true
                 };
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
