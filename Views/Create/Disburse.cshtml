@@ -1,0 +1,98 @@
+﻿@{
+    ViewData["Title"] = "Create Document";
+}
+
+<h2>สร้างเอกสารโครงการ</h2>
+
+<form asp-action="GenerateDisbursePdf" method="post">
+    <div class="form-group">
+        <label for="ProjectCode">เลือกโครงการ:</label>
+        <select id="ProjectCode" name="ProjectCode" class="form-control">
+            <option value="">-- กรุณาเลือกรหัสโครงการ --</option>
+            @foreach (var item in ViewBag.ProjectCodeList as SelectList)
+            {
+                <option value="@item.Value">@item.Text</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group mt-3 border p-3">
+        <label>ชื่อโครงการ:</label>
+        <input type="text" id="ProjectName" class="form-control mb-2" readonly />
+
+        <label>รหัสโครงการ:</label>
+        <input type="text" id="ProjectCodeInput" class="form-control mb-2" readonly />
+
+        <label>วันเริ่มเตรียมโครงการ:</label>
+        <input type="date" id="StartDate" class="form-control mb-2" readonly />
+
+        <label>วันเริ่มโครงการ:</label>
+        <input type="date" id="ProjectDate" class="form-control mb-2" readonly />
+
+        <label>วันสิ้นสุดโครงการ:</label>
+        <input type="date" id="EndDate" class="form-control mb-2" readonly />
+
+        <label>สถานที่โครงการ:</label>
+        <input type="text" id="Location" class="form-control mb-2" readonly />
+
+
+        <input type="hidden" id="ProjectNameInput" name="ProjectName" />
+        <input type="hidden" id="StartDateInput" name="StartDate" />
+        <input type="hidden" id="EndDateInput" name="EndDate" />
+        <input type="hidden" id="LocationInput" name="Location" />
+
+
+    </div>
+    <div class="mb-3">
+        <label class="form-label">เลขหนังสือ:</label>
+        <input type="text" name="DocNoDis" class="form-control" required />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">วันที่ออกหนังสือ:</label>
+        <input type="date" name="CreateDateDis" class="form-control" required id="CreateDateDis" />
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+</form>
+
+@section Scripts {
+    <script>
+        var projectDetails = @Html.Raw(ViewBag.ProjectDetailsJson);
+
+        document.getElementById('ProjectCode').addEventListener('change', function () {
+            var selectedCode = this.value;
+            var selected = projectDetails.find(p => p.ProjectCode === selectedCode);
+
+            if (selected) {
+                document.getElementById('ProjectName').value = selected.ProjectName || '';
+                document.getElementById('ProjectCodeInput').value = selected.ProjectCode || '';
+                document.getElementById('StartDate').value = selected.StartDate?.split('T')[0] || '';
+                document.getElementById('ProjectDate').value = selected.StartDate?.split('T')[0] || '';
+                document.getElementById('EndDate').value = selected.EndDate?.split('T')[0] || '';
+                document.getElementById('Location').value = selected.Location || '';
+
+                // Set the hidden input fields as well
+                document.getElementById('ProjectNameInput').value = selected.ProjectName || '';
+                document.getElementById('StartDateInput').value = selected.StartDate?.split('T')[0] || '';
+                document.getElementById('EndDateInput').value = selected.EndDate?.split('T')[0] || '';
+                document.getElementById('LocationInput').value = selected.Location || '';
+            } else {
+                // Clear if not found
+                document.getElementById('ProjectName').value = '';
+                document.getElementById('ProjectCodeInput').value = '';
+                document.getElementById('StartDate').value = '';
+                document.getElementById('ProjectDate').value = '';
+                document.getElementById('EndDate').value = '';
+                document.getElementById('Location').value = '';
+
+                // Clear the hidden input fields as well
+                document.getElementById('ProjectNameInput').value = '';
+                document.getElementById('StartDateInput').value = '';
+                document.getElementById('EndDateInput').value = '';
+                document.getElementById('LocationInput').value = '';
+            }
+        });
+
+    </script>
+}
+
+

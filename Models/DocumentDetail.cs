@@ -79,4 +79,8 @@ public partial class DocumentDetail
     public int? _32socialSt { get; set; }
 
     public int? _32social { get; set; }
+
+    public string DocNoDis { get; set; } = null!;
+
+    public DateTime? CreateDateDis { get; set; }
 }
