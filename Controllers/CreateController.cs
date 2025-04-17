@@ -450,26 +450,7 @@ namespace E_Document.Controllers
             return View();
         }
         
-        //public IActionResult Disburse()
-        //{
-        //    var projectDetails = _context.DocumentDetails
-        //        .Select(d => new
-        //        {
-        //            d.DocNo,
-        //            d.CreateDate,
-        //            d.ProjectCode,
-        //            d.ProjectName,
-        //            d.ProjectCode,
-        //            d.StartDate,
-        //            d.EndDate,
-        //            d.Location
-        //        }).ToList();
-
-        //    ViewBag.ProjectCodeList = new SelectList(projectDetails, "ProjectCode", "ProjectName");
-        //    ViewBag.ProjectDetailsJson = JsonSerializer.Serialize(projectDetails);
-
-        //    return View();
-        //}
+        
         public IActionResult Disburse()
         {
             var projectDetails = _context.DocumentDetails
