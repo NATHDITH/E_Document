@@ -21,6 +21,8 @@ public partial class AutoPdfContext : DbContext
 
     public virtual DbSet<DocumentDetail> DocumentDetails { get; set; }
 
+    public virtual DbSet<NameApprover> NameApprovers { get; set; }
+
     public virtual DbSet<Signature> Signatures { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
@@ -117,6 +119,58 @@ public partial class AutoPdfContext : DbContext
             entity.Property(e => e._31activitiesSt).HasColumnName("31activitiesST");
             entity.Property(e => e._32social).HasColumnName("32Social");
             entity.Property(e => e._32socialSt).HasColumnName("32SocialST");
+        });
+
+        modelBuilder.Entity<NameApprover>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Name_App__3214EC07DB7575EC");
+
+            entity.ToTable("Name_Approver");
+
+            entity.Property(e => e._10Approve)
+                .HasMaxLength(100)
+                .IsFixedLength()
+                .HasColumnName("10_Approve");
+            entity.Property(e => e._11Approve)
+                .HasMaxLength(100)
+                .IsFixedLength()
+                .HasColumnName("11_Approve");
+            entity.Property(e => e._1Approve)
+                .HasMaxLength(100)
+                .IsFixedLength()
+                .HasColumnName("1_Approve");
+            entity.Property(e => e._2Approve)
+                .HasMaxLength(100)
+                .IsFixedLength()
+                .HasColumnName("2_Approve");
+            entity.Property(e => e._3Approve)
+                .HasMaxLength(100)
+                .IsFixedLength()
+                .HasColumnName("3_Approve");
+            entity.Property(e => e._4Approve)
+                .HasMaxLength(100)
+                .IsFixedLength()
+                .HasColumnName("4_Approve");
+            entity.Property(e => e._5Approve)
+                .HasMaxLength(100)
+                .IsFixedLength()
+                .HasColumnName("5_Approve");
+            entity.Property(e => e._6Approve)
+                .HasMaxLength(100)
+                .IsFixedLength()
+                .HasColumnName("6_Approve");
+            entity.Property(e => e._7Approve)
+                .HasMaxLength(100)
+                .IsFixedLength()
+                .HasColumnName("7_Approve");
+            entity.Property(e => e._8Approve)
+                .HasMaxLength(100)
+                .IsFixedLength()
+                .HasColumnName("8_Approve");
+            entity.Property(e => e._9Approve)
+                .HasMaxLength(100)
+                .IsFixedLength()
+                .HasColumnName("9_Approve");
         });
 
         modelBuilder.Entity<Signature>(entity =>

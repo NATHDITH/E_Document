@@ -23,16 +23,64 @@ namespace E_Document.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            // ???????????????? Cookie Authentication
             string username = User.Identity?.Name;
 
             if (!string.IsNullOrEmpty(username))
             {
-                ViewBag.Username = username;  // ???????????????? ViewBag
+                ViewBag.Username = username;
             }
 
-            return View();
+            var approver = _context.NameApprovers.FirstOrDefault();
+
+            if (approver == null)
+            {
+                approver = new NameApprover();
+                _context.NameApprovers.Add(approver);
+                _context.SaveChanges();
+            }
+
+            return View(approver);
         }
+
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Index(NameApprover approver)
+        {
+            if (ModelState.IsValid)
+            {
+                var existing = _context.NameApprovers.FirstOrDefault();
+
+                if (existing != null)
+                {
+                    // ?????????????????????????
+                    existing._1Approve = approver._1Approve;
+                    existing._2Approve = approver._2Approve;
+                    existing._3Approve = approver._3Approve;
+                    existing._4Approve = approver._4Approve;
+                    existing._5Approve = approver._5Approve;
+                    existing._6Approve = approver._6Approve;
+                    existing._7Approve = approver._7Approve;
+                    existing._8Approve = approver._8Approve;
+                    existing._9Approve = approver._9Approve;
+                    existing._10Approve = approver._10Approve;
+                    existing._11Approve = approver._11Approve;
+
+                    // ???????????????
+                    _context.SaveChanges();
+                    TempData["Message"] = "??????????????????!";
+                }
+            }
+            else
+            {
+                TempData["Message"] = "?????????????????????????!";
+            }
+
+            return RedirectToAction("Index");
+        }
+
+
 
         [Authorize]
         public IActionResult Privacy()

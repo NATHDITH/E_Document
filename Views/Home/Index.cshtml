@@ -1,8 +1,27 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model E_Document.Models.NameApprover
+
+@{
+    ViewData["Title"] = "หน้าแรก";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h2>รายชื่อผู้อนุมัติ</h2>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+
+<form asp-action="Index" method="post">
+    @for (int i = 1; i <= 11; i++)
+    {
+        var prop = $"_{i}Approve";
+          <!-- ตั้งชื่อ input -->
+        var value = Model.GetType().GetProperty(prop)?.GetValue(Model) as string;
+        <div class="form-group">
+            <label>Approver @i</label>
+            <input class="form-control" name="@prop" value="@value" />
+        </div>
+    }
+
+    <button type="submit" class="btn btn-primary mt-3">บันทึก</button>
+</form>

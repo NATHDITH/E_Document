@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace E_Document.Models;
 
@@ -80,7 +81,9 @@ public partial class DocumentDetail
 
     public int? _32social { get; set; }
 
+    [NotMapped]
     public string DocNoDis { get; set; } = null!;
 
+    [NotMapped]
     public DateTime? CreateDateDis { get; set; }
 }
