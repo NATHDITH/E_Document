@@ -453,7 +453,7 @@ namespace E_Document.Controllers
                     document.Close();
                     byte[] fileBytes = stream.ToArray();
                     string safeFileName = string.Concat(model.ProjectName.Split(Path.GetInvalidFileNameChars()));
-                    return File(stream.ToArray(), "application/pdf", $"{safeFileName}.pdf");
+                    return File(stream.ToArray(), "application/pdf", $"ขออนุมัติ{safeFileName}.pdf");
 
                 }
             }
@@ -638,50 +638,53 @@ namespace E_Document.Controllers
     .SetFirstLineIndent(65) // เยื้องบรรทัดแรก
     .Add(new Text("จึงเรียนมาเพื่อโปรดพิจารณา  ").SetFont(thaiFont)));
                 document.Add(new Paragraph("\n")); // เพิ่มบรรทัดว่าง
-                document.Add(new Paragraph("\n")); // เพิ่มบรรทัดว่าง
+                document.Add(new Paragraph("\n")); //
+                                                   // 
+                    document.Add(new Paragraph("\n")); // เพิ่มบรรทัดว่าง
+                    document.Add(new Paragraph("\n")); // เพิ่มบรรทัดว่าง
 
-                Table signTable = new Table(2); // ตาราง 2 คอลัมน์
+                    Table signTable = new Table(2); // ตาราง 2 คอลัมน์
                 signTable.SetWidth(UnitValue.CreatePercentValue(100));
 
-                signTable.AddCell(new Cell()
-                    .SetBorder(Border.NO_BORDER)
-                    .Add(new Paragraph("ลงชื่อ .................................\n")
-                        .SetFont(thaiFont)
+                //signTable.AddCell(new Cell()
+                //    .SetBorder(Border.NO_BORDER)
+                //    .Add(new Paragraph("ลงชื่อ .................................\n")
+                //        .SetFont(thaiFont)
 
-                        .SetMultipliedLeading(1.0f)
-                        .SetTextAlignment(TextAlignment.CENTER))
-                    .Add(new Paragraph($"{approve8 ?? "N/A"}")
-                        .SetFont(thaiFont)
-                        .SetMultipliedLeading(1.0f)
-                        .SetTextAlignment(TextAlignment.CENTER))
-                    .Add(new Paragraph("อาจารที่ปรึกษา")
-                        .SetFont(thaiFont)
-                        .SetMultipliedLeading(1.0f)
-                        .SetTextAlignment(TextAlignment.CENTER))
-                    .Add(new Paragraph(".../..../....")
-                        .SetFont(thaiFont)
-                        .SetMultipliedLeading(1.0f)
-                        .SetTextAlignment(TextAlignment.CENTER))
-                );
-                signTable.AddCell(new Cell()
-                    .SetBorder(Border.NO_BORDER)
-                    .Add(new Paragraph("ลงชื่อ .................................\n") // ใช้ \n เพื่อขึ้นบรรทัดใหม่
-                        .SetFont(thaiFont)
-                        .SetMultipliedLeading(1.0f)
-                        .SetTextAlignment(TextAlignment.CENTER))
-                    .Add(new Paragraph($"{approve9 ?? "N/A"}")
-                        .SetFont(thaiFont)
-                        .SetMultipliedLeading(1.0f)
-                        .SetTextAlignment(TextAlignment.CENTER))
-                    .Add(new Paragraph("ประธานสภาผู้แทนนิสิต องค์การนิสิต")
-                        .SetFont(thaiFont)
-                        .SetMultipliedLeading(1.0f)
-                        .SetTextAlignment(TextAlignment.CENTER))
-                    .Add(new Paragraph(".../..../....")
-                        .SetFont(thaiFont)
-                        .SetMultipliedLeading(1.0f)
-                        .SetTextAlignment(TextAlignment.CENTER))
-                );
+                //        .SetMultipliedLeading(1.0f)
+                //        .SetTextAlignment(TextAlignment.CENTER))
+                //    .Add(new Paragraph($"{approve8 ?? "N/A"}")
+                //        .SetFont(thaiFont)
+                //        .SetMultipliedLeading(1.0f)
+                //        .SetTextAlignment(TextAlignment.CENTER))
+                //    .Add(new Paragraph("อาจารที่ปรึกษา")
+                //        .SetFont(thaiFont)
+                //        .SetMultipliedLeading(1.0f)
+                //        .SetTextAlignment(TextAlignment.CENTER))
+                //    .Add(new Paragraph(".../..../....")
+                //        .SetFont(thaiFont)
+                //        .SetMultipliedLeading(1.0f)
+                //        .SetTextAlignment(TextAlignment.CENTER))
+                //);
+                //signTable.AddCell(new Cell()
+                //    .SetBorder(Border.NO_BORDER)
+                //    .Add(new Paragraph("ลงชื่อ .................................\n") // ใช้ \n เพื่อขึ้นบรรทัดใหม่
+                //        .SetFont(thaiFont)
+                //        .SetMultipliedLeading(1.0f)
+                //        .SetTextAlignment(TextAlignment.CENTER))
+                //    .Add(new Paragraph($"{approve9 ?? "N/A"}")
+                //        .SetFont(thaiFont)
+                //        .SetMultipliedLeading(1.0f)
+                //        .SetTextAlignment(TextAlignment.CENTER))
+                //    .Add(new Paragraph("ประธานสภาผู้แทนนิสิต องค์การนิสิต")
+                //        .SetFont(thaiFont)
+                //        .SetMultipliedLeading(1.0f)
+                //        .SetTextAlignment(TextAlignment.CENTER))
+                //    .Add(new Paragraph(".../..../....")
+                //        .SetFont(thaiFont)
+                //        .SetMultipliedLeading(1.0f)
+                //        .SetTextAlignment(TextAlignment.CENTER))
+                //);
 
 
 
@@ -816,24 +819,439 @@ namespace E_Document.Controllers
 
 
 
+                
+
                 document.Close();
-                byte[] fileBytes = stream.ToArray();
-                return File(fileBytes, "application/pdf", "ProjectDocument.pdf");
-            }
+                    byte[] fileBytes = stream.ToArray();
+                    string safeFileName = string.Concat(documentDetail.ProjectName.Split(Path.GetInvalidFileNameChars()));
+                    return File(stream.ToArray(), "application/pdf", $"ขออนุมัติเบิกค่าใช้จ่ายโครงการ{safeFileName}.pdf");
+                }
         }
         }
 
 
         public async Task<IActionResult> Activity()
         {
-            var documents = await _context.Documents.ToListAsync();
-            return View(documents); // ✅ ส่ง Model ไปยัง View
+            var projectDetails = _context.DocumentDetails
+                .Select(d => new
+                {
+                    d.DocNo,
+                    d.CreateDate,
+                    d.ProjectCode,  // ใช้ชื่อเดิม
+                    d.ProjectName,
+                    ProjectCodeValue = d.ProjectCode,  // เปลี่ยนชื่อเป็น ProjectCodeValue
+                    d.StartDate,
+                    d.Projectdate,
+                    d.EndDate,
+                    d.Location,
+                    d.Maintenancemoney,
+                    d.Maintenancemoneytext,
+                    d.Accumulatedmoney,
+                    d.Accumulatedmoneytext,
+                    d.Othermoney,
+                    d.Othermoneytext,
+                    d._1universityactivitiesSt,
+                    d._1universityactivities,
+                    d._211publicspiritactivitiesSt,
+                    d._211publicspiritactivities,
+                    d._212moralSt,
+                    d._212moral,
+                    d._221competencybuildingactivitiesSt,
+                    d._221competencybuildingactivities,
+                    d._222itskillsSt,
+                    d._222itskills,
+                    d._223developingSt,
+                    d._223developing,
+                    d._231democraticSt,
+                    d._231democratic,
+                    d._232relationshipsSt,
+                    d._232relationships,
+                    d._24healthSt,
+                    d._24health,
+                    d._31activitiesSt,
+                    d._31activities,
+                    d._32socialSt,
+                    d._32social
+
+                }).ToList();
+
+            ViewBag.ProjectCodeList = new SelectList(projectDetails, "ProjectCode", "ProjectName");
+            ViewBag.ProjectDetailsJson = JsonSerializer.Serialize(projectDetails);
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult GenerateActivityPdf([FromForm] DocumentDetail documentDetail, [FromForm] NameApprover approver)
+        {
+
+
+
+            using (var context = new AutoPdfContext())
+            {
+                var approverData = context.NameApprovers
+                              .FirstOrDefault();  // ดึงข้อมูลแถวแรก
+                string approve1 = approverData._1Approve;   // คอลัมน์ [1_Approve]
+                string approve2 = approverData._2Approve;   // คอลัมน์ [2_Approve]
+                string approve3 = approverData._3Approve;   // คอลัมน์ [3_Approve]
+                string approve4 = approverData._4Approve;   // คอลัมน์ [4_Approve]
+                string approve5 = approverData._5Approve;   // คอลัมน์ [5_Approve]
+                string approve6 = approverData._6Approve;  // คอลัมน์ [6_Approve6]
+                string approve7 = approverData._7Approve;   // คอลัมน์ [7_Approve]
+                string approve8 = approverData._8Approve;// คอลัมน์ [8_Approve]
+                string approve9 = approverData._9Approve;   // คอลัมน์ [9_Approve]
+                string approve10 = approverData._10Approve; // คอลัมน์ [10_Approve]
+                string approve11 = approverData._11Approve; // คอลัมน์ [11_Approve]
+
+
+
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    Console.WriteLine(documentDetail._1universityactivitiesSt);
+
+                    PdfWriter writer = new PdfWriter(stream);
+                    PdfDocument pdf = new PdfDocument(writer);
+                    //Document document = new Document(pdf);
+                    iText.Layout.Document document = new iText.Layout.Document(pdf);
+                    string fontPath = "wwwroot/fonts/THSarabunNew.ttf"; // เส้นทางฟอนต์
+                    PdfFont thaiFont = PdfFontFactory.CreateFont(fontPath, PdfEncodings.IDENTITY_H);
+                    PdfFont normalFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
+                    PdfFont boldFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
+                    document.Add(new Paragraph("\n"));
+                    document.Add(new Paragraph()
+                        .Add(new Text("ที่ สภ.มก.ศรช. ").SetFont(thaiFont)) // ข้อความ "ที่"
+                        .Add(new Text(documentDetail.DocNoDis ?? "N/A").SetFont(thaiFont).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER)) // ฟอนต์ไทยและจัดตรงกลาง
+                        .Add(new Text(" / 2568 ").SetFont(thaiFont)) // ข้อความ "/2567"
+                    );
+                    var culture = new System.Globalization.CultureInfo("th-TH");
+
+                    string formattedDatenow = documentDetail.CreateDateDis.HasValue
+                        ? documentDetail.CreateDateDis.Value.ToString("dd MMMM yyyy", culture)
+                        : "N/A";
+
+                    string formattedDateCreate = documentDetail.CreateDate.HasValue
+                        ? documentDetail.CreateDate.Value.ToString("dd MMMM yyyy", culture)
+                        : "N/A";
+
+                    string formattedDatestart = documentDetail.StartDate.HasValue
+                        ? documentDetail.StartDate.Value.ToString("ddddที่ d MMMM yyyy", culture)
+                        : "N/A";
+
+                    string formattedDateend = documentDetail.EndDate.HasValue
+                        ? documentDetail.EndDate.Value.ToString("ddddที่ d MMMM yyyy", culture)
+                        : "N/A";
+
+                    
+
+
+                    document.Add(new Paragraph("วันที่ ")
+                        .Add(new Text(formattedDatenow).SetFont(thaiFont))  // แสดงวันที่ที่แปลงแล้ว
+                        .SetFont(thaiFont)
+                        .SetFontSize(12)
+                        .SetMarginLeft(250)); // เพิ่มระยะห่างจากซ้ายเพื่อเลื่อนข้อความไปทางขวา
+                    document.Add(new Paragraph()
+                        .Add(new Text("เรื่อง ขออนุมัติชั่วโมงกิจกรรมโครงการ   ").SetFont(thaiFont))
+                        .Add(new Text(documentDetail.ProjectName ?? "N/A").SetFont(thaiFont))
+                        .Add(new Text("\n เรียน ประธานคณะกรรมการองค์การนิสิต มหาวิทยาลัยเกษตรศาสตร์ วิทยาเขตศรีราชา ").SetFont(thaiFont).SetFontSize(12))
+                        .Add(new Text("\n สิ่งที่แนบมาด้วย      1. สำเนาขออนุมัติหลักการและวงเงินค่าใช้จ่ายโครงการ  ").SetFont(thaiFont))  // ใช้ฟอนต์ไทยสำหรับข้อความ
+                        .Add(new Text(documentDetail.ProjectName ?? "N/A").SetFont(thaiFont))
+                    // ใช้ฟอนต์ไทยสำหรับ ProjectName
+
+                    );
+                    document.Add(new Paragraph()
+    .SetFirstLineIndent(65).Add(new Text("2. ใบบันทึกชั่วโมงกิจกรรมโครงการ  ").SetFont(thaiFont))  // ใช้ฟอนต์ไทยสำหรับข้อความ
+                    .Add(new Text(documentDetail.ProjectName ?? "N/A").SetFont(thaiFont)));
+                    document.Add(new Paragraph()
+        .SetFirstLineIndent(65) // เยื้องบรรทัดแรก
+        .Add(new Text("ตามที่สภาผู้แทนนิสิต องค์กรนิสิต ได้รับอนุมัติหลักการและวงเงินค่าใช้จ่ายโครงการ ").SetFont(thaiFont))
+        .Add(new Text(documentDetail.ProjectName ?? "N/A").SetFont(thaiFont))
+        .Add(new Text("  ตามหนังสือเลขที่  ").SetFont(thaiFont))
+
+
+        .Add(new Text(documentDetail.DocNo ?? "N/A").SetFont(thaiFont))
+
+
+        .Add(new Text(" / 2568 ลว.  ").SetFont(thaiFont))
+        .Add(new Text(formattedDateend).SetFont(thaiFont)) // ✅ แปลงเป็น string พร้อม formatting
+        .Add(new Text(" เรื่อง ขออนุมัติหลักการและวงเงินค่าใช้จ่ายโครงการ  ").SetFont(thaiFont)
+        ).Add(new Text(documentDetail.ProjectName ?? "N/A").SetFont(thaiFont))
+
+        .SetFontSize(12)
+        .SetMultipliedLeading(1.0f)
+        .SetTextAlignment(TextAlignment.LEFT)
+    );
+                    int totalHoursStA =
+    (documentDetail._1universityactivitiesSt ?? 0) +
+    (documentDetail._211publicspiritactivitiesSt ?? 0) +
+    (documentDetail._212moralSt ?? 0) +
+    (documentDetail._221competencybuildingactivitiesSt ?? 0) +
+    (documentDetail._222itskillsSt ?? 0) +
+    (documentDetail._223developingSt ?? 0) +
+    (documentDetail._231democraticSt ?? 0) +
+    (documentDetail._232relationshipsSt ?? 0) +
+    (documentDetail._24healthSt ?? 0) +
+    (documentDetail._31activitiesSt ?? 0) +
+    (documentDetail._32socialSt ?? 0);
+                    int totalHoursA =
+    (documentDetail._1universityactivities ?? 0) +
+    (documentDetail._211publicspiritactivities ?? 0) +
+    (documentDetail._212moral ?? 0) +
+    (documentDetail._221competencybuildingactivities ?? 0) +
+    (documentDetail._222itskills ?? 0) +
+    (documentDetail._223developing ?? 0) +
+    (documentDetail._231democratic ?? 0) +
+    (documentDetail._232relationships ?? 0) +
+    (documentDetail._24health ?? 0) +
+    (documentDetail._31activities ?? 0) +
+    (documentDetail._32social ?? 0);
+                    // สร้างตาราง 4 คอลัมน์
+                    Table activityTableA = new Table(4);
+                    activityTableA.SetWidth(UnitValue.CreatePercentValue(100));
+
+
+                    activityTableA.AddHeaderCell(CreateHeaderCell("ลำดับ", thaiFont));
+                    activityTableA.AddHeaderCell(CreateHeaderCell("ประเภทกิจกรรม", thaiFont));
+                    activityTableA.AddHeaderCell(CreateHeaderCell("คณะกรรมการ", thaiFont));
+                    activityTableA .AddHeaderCell(CreateHeaderCell("ผู้เข้าร่วมกิจกรรม", thaiFont));
+
+
+                    
+                   
+
+
+                    AddActivityRow(activityTableA, "1.", "กิจกรรมมหาวิทยาลัย", thaiFont,
+documentDetail._1universityactivitiesSt.HasValue ? documentDetail._1universityactivitiesSt.Value : 0,
+documentDetail._1universityactivities.HasValue ? documentDetail._1universityactivities.Value : 0);
+
+                    AddActivityRow(activityTableA, "2.", "กิจกรรมเสริมสร้างสมรรถนะ", thaiFont,
+    0, // คณะกรรมการ = 0 เพื่อแสดงเป็นช่องว่าง
+    0); // ผู้เข้าร่วม = 0 เพื่อแสดงเป็นช่องว่าง
+
+                    AddActivityRow(activityTableA, "2.1", "ด้านพัฒนาคุณธรรม", thaiFont,
+    0, // คณะกรรมการ = 0 เพื่อแสดงเป็นช่องว่าง
+    0); // ผู้เข้าร่วม = 0 เพื่อแสดงเป็นช่องว่าง
+
+
+                    AddActivityRow(activityTableA, "2.1.1", "กิจกรรมจิตสาธารณะ ", thaiFont,
+documentDetail._211publicspiritactivitiesSt.HasValue ? documentDetail._211publicspiritactivitiesSt.Value : 0,
+documentDetail._211publicspiritactivities.HasValue ? documentDetail._211publicspiritactivities.Value : 0);
+
+                    AddActivityRow(activityTableA, "2.1.2", "กิจกรรมอื่น ๆ ", thaiFont,
+documentDetail._212moralSt.HasValue ? documentDetail._212moralSt.Value : 0,
+documentDetail._212moral.HasValue ? documentDetail._212moral.Value : 0);
+
+                    AddActivityRow(activityTableA, "2.2", " ด้านพัฒนาทักษะเสริมสร้างทางการคิดและการเรียนรู้", thaiFont,
+    0, // คณะกรรมการ = 0 เพื่อแสดงเป็นช่องว่าง
+    0); // ผู้เข้าร่วม = 0 เพื่อแสดงเป็นช่องว่าง
+                    AddActivityRow(activityTableA, "2.2.1", "ทักษะภาษาต่างประเทศ", thaiFont,
+documentDetail._221competencybuildingactivitiesSt.HasValue ? documentDetail._221competencybuildingactivitiesSt.Value : 0,
+documentDetail._221competencybuildingactivities.HasValue ? documentDetail._221competencybuildingactivities.Value : 0);
+                    AddActivityRow(activityTableA, "2.1.2", "ทักษะไอที ", thaiFont,
+documentDetail._222itskillsSt.HasValue ? documentDetail._222itskillsSt.Value : 0,
+documentDetail._222itskills.HasValue ? documentDetail._222itskills.Value : 0);
+                    AddActivityRow(activityTableA, "2.1.2", "กิจกรรมอื่น ๆ ", thaiFont,
+documentDetail._223developingSt.HasValue ? documentDetail._223developingSt.Value : 0,
+documentDetail._223developing.HasValue ? documentDetail._223developing.Value : 0);
+
+                    AddActivityRow(activityTableA, "2.3", "ด้านพัฒนาทักษะเสริมสร้างความสัมพันธ์ระหว่างบุคคล", thaiFont,
+    0, // คณะกรรมการ = 0 เพื่อแสดงเป็นช่องว่าง
+    0); // ผู้เข้าร่วม = 0 เพื่อแสดงเป็นช่องว่าง
+
+
+                    AddActivityRow(activityTableA, "2.3.1", "การเสริมสร้างทัศนคติประชาธิปไตย ", thaiFont,
+documentDetail._231democraticSt.HasValue ? documentDetail._231democraticSt.Value : 0,
+documentDetail._231democratic.HasValue ? documentDetail._231democratic.Value : 0);
+
+                    AddActivityRow(activityTableA, "2.3.2", "กิจกรรมอื่น ๆ ", thaiFont,
+documentDetail._232relationshipsSt.HasValue ? documentDetail._232relationshipsSt.Value : 0,
+documentDetail._232relationships.HasValue ? documentDetail._232relationships.Value : 0);
+                    AddActivityRow(activityTableA, "2.4", "ด้านสุขภาพ ", thaiFont,
+documentDetail._24healthSt.HasValue ? documentDetail._24healthSt.Value : 0,
+documentDetail._24health.HasValue ? documentDetail._24health.Value : 0);
+
+
+                    AddActivityRow(activityTableA, "3.", "กิจกรรมเพื่อสังคม", thaiFont,
+    0, // คณะกรรมการ = 0 เพื่อแสดงเป็นช่องว่าง
+    0); // ผู้เข้าร่วม = 0 เพื่อแสดงเป็นช่องว่าง
+
+
+                    AddActivityRow(activityTableA, "3.1", "กิจกรรมจิตสาธารณะ ", thaiFont,
+documentDetail._31activitiesSt.HasValue ? documentDetail._31activitiesSt.Value : 0,
+documentDetail._31activities.HasValue ? documentDetail._31activities.Value : 0);
+
+                    AddActivityRow(activityTableA, "3.2", "กิจกรรมอื่น ๆ ", thaiFont,
+documentDetail._32socialSt.HasValue ? documentDetail._32socialSt.Value : 0,
+documentDetail._32social.HasValue ? documentDetail._32social.Value : 0);
+
+
+                    AddTotalRow(activityTableA, thaiFont, totalHoursStA, totalHoursA);
+
+
+
+                    document.Add(activityTableA);
+                    
+                    document.Add(new Paragraph("\n")); // เพิ่มบรรทัดว่าง
+
+
+                    document.Add(new Paragraph()
+        .SetFirstLineIndent(65) // เยื้องบรรทัดแรก
+        .Add(new Text("ในการนี้ทาง สภาผู้แทนนิสิต องค์การนิสิต จึงขออนุมัติชั่วโมงกิจกรรมของนิสิต ตามรายชื่อและจำนวนชั่วโมงกิจกรรม ดังกล่าวที่ได้ขออนุมัติโครงการและดำเนินการจัดกิจกรรม ซึ่งขอรับรองว่ารายชื่อดังเอกสารแนบเป็นรายชื่อนิสิตที่เข้าร่วมกิจกรรม  จริงทุกประการ ").SetFont(thaiFont))
+        
+
+        .SetFontSize(12)
+        .SetMultipliedLeading(1.0f)
+        .SetTextAlignment(TextAlignment.LEFT));
+                    document.Add(new Paragraph()
+        .SetFirstLineIndent(65) // เยื้องบรรทัดแรก
+        .Add(new Text("จึงเรียนมาเพื่อโปรดพิจารณา  ").SetFont(thaiFont)));
+                    document.Add(new Paragraph("\n")); // เพิ่มบรรทัดว่าง
+                    document.Add(new Paragraph("\n")); //
+                                                       // 
+                    document.Add(new Paragraph("\n")); // เพิ่มบรรทัดว่าง
+                    document.Add(new Paragraph("\n")); // เพิ่มบรรทัดว่าง
+
+                    Table signTable = new Table(4); // ตาราง 2 คอลัมน์
+                    signTable.SetWidth(UnitValue.CreatePercentValue(100));
+
+                    
+
+
+
+                    // ช่องที่ 1
+                    signTable.AddCell(new Cell()
+                        .Add(new Paragraph("ความเห็นอาจารย์ที่ปรึกษา \n" +
+                        "..............................\n" +
+                        "\n") // ใช้ \n เพื่อขึ้นบรรทัดใหม่
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f))
+                        .Add(new Paragraph("\n"))
+                        .Add(new Paragraph("\n"))// เพิ่มบรรทัดว่าง
+                        .Add(new Paragraph($"{approve8 ?? "N/A"}")
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f)
+                            .SetTextAlignment(TextAlignment.CENTER))
+                        .Add(new Paragraph("อาจารย์ที่ปรึกษา")
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f)
+                            .SetTextAlignment(TextAlignment.CENTER))
+                        .Add(new Paragraph(".../..../....")
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f)
+                            .SetTextAlignment(TextAlignment.CENTER))
+                    );
+
+                    // ช่องที่ 2
+                    signTable.AddCell(new Cell()
+                        .Add(new Paragraph("เรียน  ประธานคณะกรรมการองค์การนิสิต\n" +
+                        "☐ ตรวจสอบแล้วเห็นควรอนุมัติชั่วโมงกิจกรรม\n" +
+                        "☐ ไม่เห็นควรอนุมัติ\n" +
+                        
+                        "\n") // ใช้ \n เพื่อขึ้นบรรทัดใหม่
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f))
+.Add(new Paragraph("\n")).Add(new Paragraph("\n"))
+                        .Add(new Paragraph($"{approve11 ?? "N/A"}")
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f)
+                            .SetTextAlignment(TextAlignment.CENTER))
+                        
+                        .Add(new Paragraph(".../..../....")
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f)
+                            .SetTextAlignment(TextAlignment.CENTER))
+                    );
+
+
+
+
+                    // ช่องที่ 3
+                    signTable.AddCell(new Cell()
+                        .Add(new Paragraph("☐อนุมัติชั่วโมงกิจกรรม\n" +
+                        "☐ ไม่อนุมัติ\n" +
+                        "\n") // ใช้ \n เพื่อขึ้นบรรทัดใหม่
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f))
+                        .Add(new Paragraph("\n")).Add(new Paragraph("\n"))
+
+                        .Add(new Paragraph($"{approve9 ?? "N/A"}")
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f)
+                            .SetTextAlignment(TextAlignment.CENTER))
+                        .Add(new Paragraph("นักวิชาการเงินและบัญชี")
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f)
+                            .SetTextAlignment(TextAlignment.CENTER))
+                        .Add(new Paragraph(".../..../....")
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f)
+                            .SetTextAlignment(TextAlignment.CENTER))
+                    );
+
+                    // ช่องที่ 4
+                    signTable.AddCell(new Cell()
+                        .Add(new Paragraph("☐ ดำเนินการเรียบร้อยแล้ว\n" +
+                        "☐ ยังไม่ได้ดำเนินการ\n" +
+
+                        "\n")
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f))
+                        .Add(new Paragraph("\n")).Add(new Paragraph("\n"))
+                        .Add(new Paragraph($"{approve7 ?? "N/A"}")
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f)
+                            .SetTextAlignment(TextAlignment.CENTER))
+                        .Add(new Paragraph("ผู้ดูแลระบบกิจกรรมฝ่ายกิจการนิสิต\n")
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f)
+                            .SetTextAlignment(TextAlignment.CENTER))
+                    );
+                   
+                    document.Add(signTable);
+
+
+
+
+
+
+
+                    document.Close();
+                    byte[] fileBytes = stream.ToArray();
+                    string safeFileName = string.Concat(documentDetail.ProjectName.Split(Path.GetInvalidFileNameChars()));
+                    return File(stream.ToArray(), "application/pdf", $"ขออนุมัติชัวโมงกิจกรรมโครงการ{safeFileName}.pdf");
+                }
+            
+            
+            }
+        }
+
+        static void AddActivityRow(Table table, string index, string activityName, PdfFont font, int hours1, int hours2)
+        {
+            table.AddCell(new Cell().Add(new Paragraph(index).SetFont(font)));
+            table.AddCell(new Cell().Add(new Paragraph(activityName).SetFont(font)));
+            table.AddCell(CreateHourCell(font, hours1));  // ใส่ค่าชั่วโมงที่ 1
+            table.AddCell(CreateHourCell(font, hours2));  // ใส่ค่าชั่วโมงที่ 2
+        }
+
+        static void AddSubActivityRow(Table table, string index, string subActivityName, PdfFont font, int hours1, int hours2)
+        {
+            table.AddCell(new Cell().Add(new Paragraph(index).SetFont(font)));
+            table.AddCell(new Cell().Add(new Paragraph("    " + subActivityName).SetFont(font)));
+            table.AddCell(CreateHourCell(font, hours1));  // ใส่ค่าชั่วโมงที่ 1
+            table.AddCell(CreateHourCell(font, hours2));  // ใส่ค่าชั่วโมงที่ 2
+        }
+
+        static void AddTotalRow(Table table, PdfFont font, int totalHours1, int totalHours2)
+        {
+            table.AddCell(new Cell(1, 2).Add(new Paragraph("รวมชั่วโมงกิจกรรมทั้งสิ้น").SetFont(font)));
+            table.AddCell(CreateHourCell(font, totalHours1));  // รวมชั่วโมงที่ 1
+            table.AddCell(CreateHourCell(font, totalHours2));  // รวมชั่วโมงที่ 2
+        }
+
+        static Cell CreateHourCell(PdfFont font, int hours)
+        {
+            string displayText = hours == 0 ? "" : hours + " ชั่วโมง";
+            return new Cell()
+                .Add(new Paragraph(displayText).SetFont(font))
+                .SetTextAlignment(TextAlignment.CENTER);
         }
 
 
+        static Cell CreateHeaderCell(string text, PdfFont font)
+        {
+            return new Cell()
+                .SetTextAlignment(TextAlignment.CENTER)
 
-        // ✅ ฟังก์ชันสำหรับส่งเอกสาร
-        // ✅ ฟังก์ชันสำหรับส่งเอกสารและบันทึก Approval
+                .SetBackgroundColor(iText.Kernel.Colors.ColorConstants.LIGHT_GRAY)
+                .Add(new Paragraph(text).SetFont(font));
+        }
+
+
 
         [HttpPost]
         public async Task<IActionResult> UploadDocument(IFormFile file)
@@ -948,181 +1366,6 @@ namespace E_Document.Controllers
 
 
         
-
-        //        [HttpPost]
-        //        public IActionResult GenerateActivityPdf([FromForm] DocumentDetail2 model)
-        //        {
-        //            using (MemoryStream stream = new MemoryStream())
-        //            {
-        //                PdfWriter writer = new PdfWriter(stream);
-        //                PdfDocument pdf = new PdfDocument(writer);
-        //                Document document = new Document(pdf);
-        //                iText.Layout.Document document = new iText.Layout.Document(pdf);
-        //                string fontPath = "wwwroot/fonts/THSarabunNew.ttf"; // เส้นทางฟอนต์
-        //                PdfFont thaiFont = PdfFontFactory.CreateFont(fontPath, PdfEncodings.IDENTITY_H); // ฝังฟอนต์
-        //                PdfFont normalFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
-        //                PdfFont boldFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
-        //                Cell cell = new Cell().Add(new Paragraph("ข้อความตัวหนา").SetFont(boldFont));
-        //                Table table = new Table(2);
-        //                table.AddCell(cell);
-        //                เพิ่มข้อความโดยใช้ฟอนต์ไทย
-        //                int activity1Hours1 = model.Activity1Hours1;
-        //                int activity1Hours2 = model.Activity1Hours2;
-        //                int subActivity2Hours1 = model.SubActivity2Hours1;
-        //                int subActivity2Hours2 = model.SubActivity2Hours2;
-        //                int subActivity2_1Hours1 = model.SubActivity2_1Hours1;
-        //                int subActivity2_1Hours2 = model.SubActivity2_1Hours2;
-        //                int subActivity2_2Hours1 = model.SubActivity2_2Hours1;
-        //                int subActivity2_2Hours2 = model.SubActivity2_2Hours2;
-        //                int subActivity2_3Hours1 = model.SubActivity2_3Hours1;
-        //                int subActivity2_3Hours2 = model.SubActivity2_3Hours2;
-        //                int subActivity2_4Hours1 = model.SubActivity2_4Hours1;
-        //                int subActivity2_4Hours2 = model.SubActivity2_4Hours2;
-
-        //                int totalHours1 = activity1Hours1 + subActivity2Hours1 + subActivity2_1Hours1 + subActivity2_2Hours1 + subActivity2_3Hours1 + subActivity2_4Hours1;
-        //                int totalHours2 = activity1Hours2 + subActivity2Hours2 + subActivity2_1Hours2 + subActivity2_2Hours2 + subActivity2_3Hours2 + subActivity2_4Hours2;
-        //                document.Add(new Paragraph("\n")); // เพิ่มบรรทัดว่าง
-        //                document.Add(new Paragraph("\n")); // เพิ่มบรรทัดว่าง
-
-        //                เพิ่มข้อมูล DocNo โดยใช้ฟอนต์ไทยทั้งหมด
-        //                document.Add(new Paragraph()
-        //                    .Add(new Text("ที่ สภ.มก.ศรช. ").SetFont(thaiFont)) // ข้อความ "ที่"
-        //                    .Add(new Text(model.DocNo ?? "N/A").SetFont(thaiFont).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER)) // ฟอนต์ไทยและจัดตรงกลาง
-        //                    .Add(new Text(" / 2568 ").SetFont(thaiFont)) // ข้อความ "/2567"
-        //                );
-
-        //                แปลงวันที่ให้เป็นภาษาไทย
-        //                string formattedDatenow = model.ProjectDate?.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("th-TH")) ?? "N/A";
-
-        //                string formattedDatestart = model.ProjectStartDate?.ToString("ddddที่ d MMMM yyyy", new System.Globalization.CultureInfo("th-TH")) ?? "N/A";
-        //                string formattedDateend = model.ProjectEndDate?.ToString("ddddที่ d MMMM yyyy", new System.Globalization.CultureInfo("th-TH")) ?? "N/A";
-
-
-        //                int totalDays = (model.ProjectStartDate.HasValue && model.ProjectEndDate.HasValue)
-        //    ? (model.ProjectEndDate.Value - model.ProjectStartDate.Value).Days
-        //    : 0;
-        //                เพิ่มวันที่
-        //                document.Add(new Paragraph("วันที่ ")
-        //                    .Add(new Text(formattedDatenow).SetFont(thaiFont))  // แสดงวันที่ที่แปลงแล้ว
-        //                    .SetFont(thaiFont)
-        //                    .SetFontSize(12)
-        //                    .SetMarginLeft(250)); // เพิ่มระยะห่างจากซ้ายเพื่อเลื่อนข้อความไปทางขวา
-
-
-
-        //                document.Add(new Paragraph()
-        //                    .Add(new Text("เรื่อง ขออนุมัติชั่วโมงกิจกรรมโครงการ  ").SetFont(thaiFont))
-        //                    .Add(new Text(model.ProjectName ?? "N/A").SetFont(thaiFont))
-        //                    .Add(new Text("\n เรียน ประธานคณะกรรมการองค์การนิสิต มหาวิทยาลัยเกษตรศาสตร์ วิทยาเขตศรีราชา ").SetFont(thaiFont).SetFontSize(12))
-        //                    .Add(new Text("\n สิ่งที่แนบมาด้วย      1. สำเนาขออนุมัติหลักการและวงเงินค่าใช้จ่ายโครงการ ").SetFont(thaiFont))  // ใช้ฟอนต์ไทยสำหรับข้อความ
-        //                    .Add(new Text(model.ProjectName ?? "N/A").SetFont(thaiFont))
-
-
-        //                 ใช้ฟอนต์ไทยสำหรับ ProjectName
-        //                );
-        //                document.Add(new Paragraph()
-        //    .SetFirstLineIndent(65).Add(new Text("2. ใบบันทึกชั่วโมงกิจกรรมโครงการ  ").SetFont(thaiFont))  // ใช้ฟอนต์ไทยสำหรับข้อความ
-        //                    .Add(new Text(model.ProjectName ?? "N/A").SetFont(thaiFont)));
-
-
-
-        //                document.Add(new Paragraph()
-        //    .SetFirstLineIndent(65) // เยื้องบรรทัดแรก
-        //    .Add(new Text("เนื่องด้วยสภาผู้แทนนิสิต องค์การนิสิต ได้มีการดำเนินการจัดกิจกรรมโครงการ ").SetFont(thaiFont))
-        //    .Add(new Text(model.ProjectName ?? "N/A").SetFont(thaiFont))
-        //    .Add(new Text("  รหัสโครงการ  ").SetFont(thaiFont))
-        //    .Add(new Text(model.ProjectCode ?? "N/A").SetFont(thaiFont))
-        //    .Add(new Text("  ในระหว่าง ").SetFont(thaiFont))
-        //    .Add(new Text(formattedDatestart).SetFont(thaiFont))
-        //    .Add(new Text("  ถึง ").SetFont(thaiFont))
-        //    .Add(new Text(formattedDateend).SetFont(thaiFont))
-        //    .Add(new Text($" ซึ่งมีระยะเวลาทั้งสิ้น {totalDays} วัน").SetFont(thaiFont))
-        //    .Add(new Text(" จำนวนการทำกิจกรรมทั้งหมด  ").SetFont(thaiFont))
-        //    .Add(new Text(totalHours1.ToString()).SetFont(thaiFont))
-
-        //    .Add(new Text(" ชั่วโมง โดยมีรายละเอียดการบันทึกชั่วโมงกิจกรรมด้านต่าง ๆ ต่อครั้ง และมีผู้เข้าร่วมกิจกรรมจำแนกตามวัน ดังนี้  ").SetFont(thaiFont))
-
-        //    .SetFontSize(12)
-        //    .SetMultipliedLeading(1.0f)
-        //    .SetTextAlignment(TextAlignment.LEFT)
-        //);
-
-
-
-
-
-
-
-
-
-        //                // สร้างตาราง 4 คอลัมน์
-        //                Table activityTable = new Table(4);
-        //                activityTable.SetWidth(UnitValue.CreatePercentValue(100));
-
-
-        //                activityTable.AddHeaderCell(CreateHeaderCell("ลำดับ", thaiFont));
-        //                activityTable.AddHeaderCell(CreateHeaderCell("ประเภทกิจกรรม", thaiFont));
-        //                activityTable.AddHeaderCell(CreateHeaderCell("คณะกรรมการ", thaiFont));
-        //                activityTable.AddHeaderCell(CreateHeaderCell("ผู้เข้าร่วมกิจกรรม", thaiFont));
-
-
-        //                AddActivityRow(activityTable, "1.", "กิจกรรมมหาวิทยาลัย", thaiFont, activity1Hours1, activity1Hours2);
-        //                AddSubActivityRow(activityTable, "2.", "กิจกรรมเลือกเข้าร่วม", thaiFont, subActivity2Hours1, subActivity2Hours2);
-        //                AddSubActivityRow(activityTable, "2.1", "กิจกรรมทางด้านคุณธรรม จริยธรรมหรือค่านิยม", thaiFont, subActivity2_1Hours1, subActivity2_1Hours2);
-        //                AddSubActivityRow(activityTable, "2.2", "กิจกรรมเสริมสร้างทักษะทางวิชาการหรือวิชาชีพ", thaiFont, subActivity2_2Hours1, subActivity2_2Hours2);
-        //                AddSubActivityRow(activityTable, "2.3", "กิจกรรมพัฒนาบุคลิกภาพและการแสดงออก", thaiFont, subActivity2_3Hours1, subActivity2_3Hours2);
-        //                AddSubActivityRow(activityTable, "2.4", "กิจกรรมทางด้านเสริมสร้างและพัฒนาสุขภาพ", thaiFont, subActivity2_4Hours1, subActivity2_4Hours2);
-
-        //                รวมชั่วโมงกิจกรรม
-
-
-        //                AddTotalRow(activityTable, thaiFont, totalHours1, totalHours2);
-
-
-
-        //                document.Add(activityTable);
-        //                document.Close();
-        //                byte[] fileBytes = stream.ToArray();
-        //                return File(fileBytes, "application/pdf", "ProjectDocument.pdf");
-        //            }
-        //        }
-        //        static void AddActivityRow(Table table, string index, string activityName, PdfFont font, int hours1, int hours2)
-        //        {
-        //            table.AddCell(new Cell().Add(new Paragraph(index).SetFont(font)));
-        //            table.AddCell(new Cell().Add(new Paragraph(activityName).SetFont(font)));
-        //            table.AddCell(CreateHourCell(font, hours1));  // ใส่ค่าชั่วโมงที่ 1
-        //            table.AddCell(CreateHourCell(font, hours2));  // ใส่ค่าชั่วโมงที่ 2
-        //        }
-
-        //        static void AddSubActivityRow(Table table, string index, string subActivityName, PdfFont font, int hours1, int hours2)
-        //        {
-        //            table.AddCell(new Cell().Add(new Paragraph(index).SetFont(font)));
-        //            table.AddCell(new Cell().Add(new Paragraph("    " + subActivityName).SetFont(font)));
-        //            table.AddCell(CreateHourCell(font, hours1));  // ใส่ค่าชั่วโมงที่ 1
-        //            table.AddCell(CreateHourCell(font, hours2));  // ใส่ค่าชั่วโมงที่ 2
-        //        }
-
-        //        static void AddTotalRow(Table table, PdfFont font, int totalHours1, int totalHours2)
-        //        {
-        //            table.AddCell(new Cell(1, 2).Add(new Paragraph("รวมชั่วโมงกิจกรรมทั้งสิ้น").SetFont(font)));
-        //            table.AddCell(CreateHourCell(font, totalHours1));  // รวมชั่วโมงที่ 1
-        //            table.AddCell(CreateHourCell(font, totalHours2));  // รวมชั่วโมงที่ 2
-        //        }
-
-        //        static Cell CreateHourCell(PdfFont font, int hours)
-        //        {
-        //            return new Cell().Add(new Paragraph(hours.ToString() + " ชั่วโมง").SetFont(font)).SetTextAlignment(TextAlignment.CENTER);
-        //        }
-
-        //        static Cell CreateHeaderCell(string text, PdfFont font)
-        //        {
-        //            return new Cell()
-        //                .SetTextAlignment(TextAlignment.CENTER)
-
-        //                .SetBackgroundColor(iText.Kernel.Colors.ColorConstants.LIGHT_GRAY)
-        //                .Add(new Paragraph(text).SetFont(font));
-        //        }
-
 
 
 

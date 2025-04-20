@@ -33,7 +33,7 @@
         <input type="date" name="StartDate" class="form-control" required id="StartDate" />
     </div>
 
-    <div class="mb-3">
+    @* <div class="mb-3">
         <label class="form-label">วันเริ่มโครงการ:</label>
         <input type="date" name="ProjectDate" class="form-control" required id="ProjectDate   />
     </div>
@@ -41,7 +41,15 @@
     <div class="mb-3">
         <label class="form-label">วันสิ้นสุดโครงการ:</label>
         <input type="date" name="EndDate" class="form-control" required id="EndDate" />
-    </div>
+    </div> *@
+    <div class="mb-3">
+    <label class="form-label">วันเริ่มโครงการ:</label>
+    <input type="date" name="ProjectDate" class="form-control" required id="ProjectDate" />
+</div>
+<div class="mb-3">
+    <label class="form-label">วันสิ้นสุดโครงการ:</label>
+    <input type="date" name="EndDate" class="form-control" required id="EndDate" />
+</div>
     <div class="mb-3">
         <label class="form-label">สถานที่โครงการ:</label>
         <input type="text" name="Location" class="form-control" required />
@@ -214,20 +222,61 @@
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-        let today = new Date().toISOString().split('T')[0];
-        document.getElementById("CreateDate").setAttribute("min", today);
+    const createDateInput = document.getElementById("CreateDate");
+    const startDateInput = document.getElementById("StartDate");
+    const projectDateInput = document.getElementById("ProjectDate");
+    const endDateInput = document.getElementById("EndDate");
 
-        document.getElementById("CreateDate").addEventListener("change", function () {
-            let CreateDate = this.value;
-            document.getElementById("StartDate").setAttribute("min", CreateDate);
-            document.getElementById("EndDate").setAttribute("min", CreateDate);
-        });
+    const today = new Date().toISOString().split('T')[0];
+    createDateInput.setAttribute("min", today);
 
-        document.getElementById("StartDate").addEventListener("change", function () {
-            let startDate = this.value;
-            document.getElementById("EndDate").setAttribute("min", startDate);
-        });
+    // เมื่อเลือก CreateDate
+    createDateInput.addEventListener("change", function () {
+        const createDate = this.value;
+        startDateInput.value = "";
+        startDateInput.setAttribute("min", createDate);
+
+        projectDateInput.value = "";
+        projectDateInput.removeAttribute("min");
+
+        endDateInput.value = "";
+        endDateInput.removeAttribute("min");
     });
+
+    // เมื่อเลือก StartDate
+    startDateInput.addEventListener("change", function () {
+        const startDate = this.value;
+
+        // ProjectDate ต้อง >= StartDate
+        projectDateInput.value = "";
+        projectDateInput.setAttribute("min", startDate);
+
+        // EndDate ยังไม่รู้ ProjectDate ก็ใช้ StartDate ไปก่อน
+        endDateInput.value = "";
+        endDateInput.setAttribute("min", startDate);
+    });
+
+    // เมื่อเลือก ProjectDate
+    projectDateInput.addEventListener("change", function () {
+        const projectDate = this.value;
+
+        // EndDate ต้อง >= ProjectDate
+        endDateInput.value = "";
+        endDateInput.setAttribute("min", projectDate);
+    });
+
+    // ตรวจสอบย้อนหลังแบบ alert เพิ่มความปลอดภัย
+    endDateInput.addEventListener("change", function () {
+        const endDate = this.value;
+        const projectDate = projectDateInput.value;
+
+        if (projectDate && endDate < projectDate) {
+            alert("วันสิ้นสุดโครงการต้องไม่ก่อนวันเริ่มโครงการ");
+            this.value = "";
+        }
+    });
+});
+
 
 
 </script>

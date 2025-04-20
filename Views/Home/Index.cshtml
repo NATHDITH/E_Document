@@ -2,6 +2,22 @@
 
 @{
     ViewData["Title"] = "หน้าแรก";
+
+    // กำหนดตำแหน่งของผู้อนุมัติแต่ละลำดับ
+    string[] approverTitles = new string[]
+    {
+        "รองอธิการบดีวิทยาเขตศรีราชา",                  // Approver 1
+        "ผู้ช่วยอธิการบดีฝ่ายกิจการนิสิต และพัฒนาอย่างยั่งยืน วิทยาเขตศรีราชา",            // Approver 2
+        "ผู้อำนวยการสำนักงานวิทยาเขตศรีราชา",                // Approver 3
+        "นักวิชาการเงินและบัญชี",         // Approver 4
+        "ผู้อำนวยการกองบริหารการศึกษาและพัฒนานิสิต",                          // Approver 5
+        "หัวหน้างานบริหารกิจการนิสิตและการกีฬา",          // Approver 6
+        "นักวิชาการศึกษา ชำนาญการ",          // Approver 7
+        "อาจารย์ที่ปรึกษา",           // Approver 8
+        "ประธานสภาผู้แทนนิสิต องค์การนิสิต",                     // Approver 9
+        "เลขาธิการ สภาผู้แทนนิสิต องค์การนิสิต",                     // Approver 10
+        "ประธานคณะกรรมาธิการฝ่ายควบคุม ติดตาม และตรวจสอบโครงการ สภาผู้แทนนิสิต องค์การนิสิต"               // Approver 11
+    };
 }
 
 <h2>รายชื่อผู้อนุมัติ</h2>
@@ -15,10 +31,11 @@
     @for (int i = 1; i <= 11; i++)
     {
         var prop = $"_{i}Approve";
-          <!-- ตั้งชื่อ input -->
         var value = Model.GetType().GetProperty(prop)?.GetValue(Model) as string;
+        var labelText = approverTitles[i - 1]; // ดึงชื่อตำแหน่งจาก array
+
         <div class="form-group">
-            <label>Approver @i</label>
+            <label>@labelText</label>
             <input class="form-control" name="@prop" value="@value" />
         </div>
     }

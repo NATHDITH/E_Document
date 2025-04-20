@@ -97,28 +97,70 @@ public partial class AutoPdfContext : DbContext
             entity.Property(e => e.ProjectName)
                 .HasMaxLength(100)
                 .IsFixedLength();
-            entity.Property(e => e._1universityactivities).HasColumnName("1universityactivities");
-            entity.Property(e => e._1universityactivitiesSt).HasColumnName("1universityactivitiesST");
+            entity.Property(e => e._1universityactivities)
+                .HasDefaultValue(0)
+                .HasColumnName("1universityactivities");
+            entity.Property(e => e._1universityactivitiesSt)
+                .HasDefaultValue(0)
+                .HasColumnName("1universityactivitiesSt");
             entity.Property(e => e._211publicspiritactivities).HasColumnName("211Publicspiritactivities");
-            entity.Property(e => e._211publicspiritactivitiesSt).HasColumnName("211PublicspiritactivitiesST");
-            entity.Property(e => e._212moral).HasColumnName("212Moral");
-            entity.Property(e => e._212moralSt).HasColumnName("212MoralST");
-            entity.Property(e => e._221competencybuildingactivities).HasColumnName("221Competencybuildingactivities");
-            entity.Property(e => e._221competencybuildingactivitiesSt).HasColumnName("221CompetencybuildingactivitiesST");
-            entity.Property(e => e._222itskills).HasColumnName("222ITskills");
-            entity.Property(e => e._222itskillsSt).HasColumnName("222ITskillsST");
-            entity.Property(e => e._223developing).HasColumnName("223Developing");
-            entity.Property(e => e._223developingSt).HasColumnName("223DevelopingST");
-            entity.Property(e => e._231democratic).HasColumnName("231democratic");
-            entity.Property(e => e._231democraticSt).HasColumnName("231democraticST");
-            entity.Property(e => e._232relationships).HasColumnName("232relationships");
-            entity.Property(e => e._232relationshipsSt).HasColumnName("232relationshipsST");
-            entity.Property(e => e._24health).HasColumnName("24Health");
-            entity.Property(e => e._24healthSt).HasColumnName("24HealthST");
-            entity.Property(e => e._31activities).HasColumnName("31activities");
-            entity.Property(e => e._31activitiesSt).HasColumnName("31activitiesST");
-            entity.Property(e => e._32social).HasColumnName("32Social");
-            entity.Property(e => e._32socialSt).HasColumnName("32SocialST");
+            entity.Property(e => e._211publicspiritactivitiesSt)
+                .HasDefaultValue(0)
+                .HasColumnName("211PublicspiritactivitiesSt");
+            entity.Property(e => e._212moral)
+                .HasDefaultValue(0)
+                .HasColumnName("212Moral");
+            entity.Property(e => e._212moralSt)
+                .HasDefaultValue(0)
+                .HasColumnName("212MoralSt");
+            entity.Property(e => e._221competencybuildingactivities)
+                .HasDefaultValue(0)
+                .HasColumnName("221Competencybuildingactivities");
+            entity.Property(e => e._221competencybuildingactivitiesSt)
+                .HasDefaultValue(0)
+                .HasColumnName("221CompetencybuildingactivitiesSt");
+            entity.Property(e => e._222itskills)
+                .HasDefaultValue(0)
+                .HasColumnName("222ITskills");
+            entity.Property(e => e._222itskillsSt)
+                .HasDefaultValue(0)
+                .HasColumnName("222ITskillsSt");
+            entity.Property(e => e._223developing)
+                .HasDefaultValue(0)
+                .HasColumnName("223Developing");
+            entity.Property(e => e._223developingSt)
+                .HasDefaultValue(0)
+                .HasColumnName("223DevelopingSt");
+            entity.Property(e => e._231democratic)
+                .HasDefaultValue(0)
+                .HasColumnName("231democratic");
+            entity.Property(e => e._231democraticSt)
+                .HasDefaultValue(0)
+                .HasColumnName("231democraticSt");
+            entity.Property(e => e._232relationships)
+                .HasDefaultValue(0)
+                .HasColumnName("232relationships");
+            entity.Property(e => e._232relationshipsSt)
+                .HasDefaultValue(0)
+                .HasColumnName("232relationshipsSt");
+            entity.Property(e => e._24health)
+                .HasDefaultValue(0)
+                .HasColumnName("24Health");
+            entity.Property(e => e._24healthSt)
+                .HasDefaultValue(0)
+                .HasColumnName("24HealthSt");
+            entity.Property(e => e._31activities)
+                .HasDefaultValue(0)
+                .HasColumnName("31activities");
+            entity.Property(e => e._31activitiesSt)
+                .HasDefaultValue(0)
+                .HasColumnName("31activitiesSt");
+            entity.Property(e => e._32social)
+                .HasDefaultValue(0)
+                .HasColumnName("32Social");
+            entity.Property(e => e._32socialSt)
+                .HasDefaultValue(0)
+                .HasColumnName("32SocialSt");
         });
 
         modelBuilder.Entity<NameApprover>(entity =>
