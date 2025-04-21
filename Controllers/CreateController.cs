@@ -1024,12 +1024,12 @@ documentDetail._1universityactivitiesSt.HasValue ? documentDetail._1universityac
 documentDetail._1universityactivities.HasValue ? documentDetail._1universityactivities.Value : 0);
 
                     AddActivityRow(activityTableA, "2.", "กิจกรรมเสริมสร้างสมรรถนะ", thaiFont,
-    0, // คณะกรรมการ = 0 เพื่อแสดงเป็นช่องว่าง
-    0); // ผู้เข้าร่วม = 0 เพื่อแสดงเป็นช่องว่าง
+    null, // คณะกรรมการ = 0 เพื่อแสดงเป็นช่องว่าง
+    null); // ผู้เข้าร่วม = 0 เพื่อแสดงเป็นช่องว่าง
 
                     AddActivityRow(activityTableA, "2.1", "ด้านพัฒนาคุณธรรม", thaiFont,
-    0, // คณะกรรมการ = 0 เพื่อแสดงเป็นช่องว่าง
-    0); // ผู้เข้าร่วม = 0 เพื่อแสดงเป็นช่องว่าง
+    null, // คณะกรรมการ = 0 เพื่อแสดงเป็นช่องว่าง
+    null); // ผู้เข้าร่วม = 0 เพื่อแสดงเป็นช่องว่าง
 
 
                     AddActivityRow(activityTableA, "2.1.1", "กิจกรรมจิตสาธารณะ ", thaiFont,
@@ -1041,8 +1041,8 @@ documentDetail._212moralSt.HasValue ? documentDetail._212moralSt.Value : 0,
 documentDetail._212moral.HasValue ? documentDetail._212moral.Value : 0);
 
                     AddActivityRow(activityTableA, "2.2", " ด้านพัฒนาทักษะเสริมสร้างทางการคิดและการเรียนรู้", thaiFont,
-    0, // คณะกรรมการ = 0 เพื่อแสดงเป็นช่องว่าง
-    0); // ผู้เข้าร่วม = 0 เพื่อแสดงเป็นช่องว่าง
+    null, // คณะกรรมการ = 0 เพื่อแสดงเป็นช่องว่าง
+    null); // ผู้เข้าร่วม = 0 เพื่อแสดงเป็นช่องว่าง
                     AddActivityRow(activityTableA, "2.2.1", "ทักษะภาษาต่างประเทศ", thaiFont,
 documentDetail._221competencybuildingactivitiesSt.HasValue ? documentDetail._221competencybuildingactivitiesSt.Value : 0,
 documentDetail._221competencybuildingactivities.HasValue ? documentDetail._221competencybuildingactivities.Value : 0);
@@ -1054,8 +1054,8 @@ documentDetail._223developingSt.HasValue ? documentDetail._223developingSt.Value
 documentDetail._223developing.HasValue ? documentDetail._223developing.Value : 0);
 
                     AddActivityRow(activityTableA, "2.3", "ด้านพัฒนาทักษะเสริมสร้างความสัมพันธ์ระหว่างบุคคล", thaiFont,
-    0, // คณะกรรมการ = 0 เพื่อแสดงเป็นช่องว่าง
-    0); // ผู้เข้าร่วม = 0 เพื่อแสดงเป็นช่องว่าง
+    null, // คณะกรรมการ = 0 เพื่อแสดงเป็นช่องว่าง
+    null); // ผู้เข้าร่วม = 0 เพื่อแสดงเป็นช่องว่าง
 
 
                     AddActivityRow(activityTableA, "2.3.1", "การเสริมสร้างทัศนคติประชาธิปไตย ", thaiFont,
@@ -1071,8 +1071,8 @@ documentDetail._24health.HasValue ? documentDetail._24health.Value : 0);
 
 
                     AddActivityRow(activityTableA, "3.", "กิจกรรมเพื่อสังคม", thaiFont,
-    0, // คณะกรรมการ = 0 เพื่อแสดงเป็นช่องว่าง
-    0); // ผู้เข้าร่วม = 0 เพื่อแสดงเป็นช่องว่าง
+    null, // คณะกรรมการ = 0 เพื่อแสดงเป็นช่องว่าง
+    null); // ผู้เข้าร่วม = 0 เพื่อแสดงเป็นช่องว่าง
 
 
                     AddActivityRow(activityTableA, "3.1", "กิจกรรมจิตสาธารณะ ", thaiFont,
@@ -1210,13 +1210,14 @@ documentDetail._32social.HasValue ? documentDetail._32social.Value : 0);
             }
         }
 
-        static void AddActivityRow(Table table, string index, string activityName, PdfFont font, int hours1, int hours2)
+        static void AddActivityRow(Table table, string index, string activityName, PdfFont font, int? hours1, int? hours2)
         {
             table.AddCell(new Cell().Add(new Paragraph(index).SetFont(font)));
             table.AddCell(new Cell().Add(new Paragraph(activityName).SetFont(font)));
-            table.AddCell(CreateHourCell(font, hours1));  // ใส่ค่าชั่วโมงที่ 1
-            table.AddCell(CreateHourCell(font, hours2));  // ใส่ค่าชั่วโมงที่ 2
+            table.AddCell(CreateHourCell(font, hours1));
+            table.AddCell(CreateHourCell(font, hours2));
         }
+
 
         static void AddSubActivityRow(Table table, string index, string subActivityName, PdfFont font, int hours1, int hours2)
         {
@@ -1233,13 +1234,14 @@ documentDetail._32social.HasValue ? documentDetail._32social.Value : 0);
             table.AddCell(CreateHourCell(font, totalHours2));  // รวมชั่วโมงที่ 2
         }
 
-        static Cell CreateHourCell(PdfFont font, int hours)
+        static Cell CreateHourCell(PdfFont font, int? hours)
         {
-            string displayText = hours == 0 ? "" : hours + " ชั่วโมง";
+            string displayText = hours.HasValue ? $"{hours.Value} ชั่วโมง" : "";
             return new Cell()
                 .Add(new Paragraph(displayText).SetFont(font))
                 .SetTextAlignment(TextAlignment.CENTER);
         }
+
 
 
         static Cell CreateHeaderCell(string text, PdfFont font)

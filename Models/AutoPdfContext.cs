@@ -103,7 +103,9 @@ public partial class AutoPdfContext : DbContext
             entity.Property(e => e._1universityactivitiesSt)
                 .HasDefaultValue(0)
                 .HasColumnName("1universityactivitiesSt");
-            entity.Property(e => e._211publicspiritactivities).HasColumnName("211Publicspiritactivities");
+            entity.Property(e => e._211publicspiritactivities)
+                .HasDefaultValue(0)
+                .HasColumnName("211Publicspiritactivities");
             entity.Property(e => e._211publicspiritactivitiesSt)
                 .HasDefaultValue(0)
                 .HasColumnName("211PublicspiritactivitiesSt");
