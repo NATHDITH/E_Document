@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using iText.Layout;  // เพิ่ม namespace นี้
 using iTextDocument = iText.Layout.Document;
 using System.Text.Json;
+using ModelDocument = E_Document.Models.Document;
 
 using Microsoft.AspNetCore.Authorization;
 
@@ -143,15 +144,15 @@ namespace E_Document.Controllers
                     var culture = new System.Globalization.CultureInfo("th-TH");
 
                     string formattedDatenow = model.CreateDate.HasValue
-                        ? model.CreateDate.Value.ToString("dd MMMM yyyy", culture)
-                        : "N/A";
+    ? $"{model.CreateDate.Value.ToString("dd MMMM", culture)} {model.CreateDate.Value.Year + 543}"
+    : "N/A";
 
                     string formattedDatestart = model.StartDate.HasValue
-                        ? model.StartDate.Value.ToString("ddddที่ d MMMM yyyy", culture)
+                        ? $"{model.StartDate.Value.ToString("ddddที่ d MMMM", culture)} {model.StartDate.Value.Year + 543}"
                         : "N/A";
 
                     string formattedDateend = model.EndDate.HasValue
-                        ? model.EndDate.Value.ToString("ddddที่ d MMMM yyyy", culture)
+                        ? $"{model.EndDate.Value.ToString("ddddที่ d MMMM", culture)} {model.EndDate.Value.Year + 543}"
                         : "N/A";
 
 
@@ -1254,7 +1255,8 @@ documentDetail._32social.HasValue ? documentDetail._32social.Value : 0);
         }
 
 
-
+        // UploadDocument: อัปโหลดไฟล์
+        // UploadDocument: อัปโหลดไฟล์
         [HttpPost]
         public async Task<IActionResult> UploadDocument(IFormFile file)
         {
@@ -1367,7 +1369,6 @@ documentDetail._32social.HasValue ? documentDetail._32social.Value : 0);
 
 
 
-        
 
 
 

@@ -53,13 +53,19 @@
                     }
                 </td>
 
-                <td>
+                    <td>
                     @if (approval.Status == "Pending" || approval.Status == "In Review")
                     {
-                        <a asp-action="Approve" asp-route-id="@approval.Id" class="btn btn-success">อนุมัติ</a>
-                        <a asp-action="Reject" asp-route-id="@approval.Id" class="btn btn-danger">ปฏิเสธ</a>
+                <form asp-action="Approve" asp-route-id="@approval.Id" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-success">อนุมัติ</button>
+                </form>
+
+                <form asp-action="Reject" asp-route-id="@approval.Id" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">ปฏิเสธ</button>
+                </form>
                     }
-                </td>
+    </td>
+
             </tr>
         }
     </tbody>
