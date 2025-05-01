@@ -33,56 +33,71 @@ namespace E_Document.Controllers
 
             return View(approvals);
         }
-
-        // อนุมัติเอกสาร
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Approve(int id)
         {
-            var approval = await _context.Approvals.Include(a => a.Document).FirstOrDefaultAsync(a => a.Id == id);
+            // ดึงข้อมูล approval พร้อมทั้งข้อมูลของ Approver
+            var approval = await _context.Approvals
+                .Include(a => a.Document)
+                .Include(a => a.Approver) // ดึงข้อมูล Approver มาด้วย
+                .FirstOrDefaultAsync(a => a.Id == id);
+
             if (approval == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "ไม่พบข้อมูลการอนุมัติ";
+                return RedirectToAction(nameof(Index));
             }
 
-            // อัปเดต approval ของคนนี้
-            approval.Status = "Approved";
+            // อัปเดตสถานะของการอนุมัติ
+            approval.Status = "Approved"; // หรือสถานะที่คุณต้องการให้เปลี่ยน
+            approval.LastApprover = approval.Approver.Username;
             approval.ApprovedAt = DateTime.Now;
-            _context.Update(approval);
 
-            // หา next approver
-            var nextApprover = FindNextApprover(approval.ApprovalOrder);
-
-            if (nextApprover != null)
+            // อัปเดต LastApprover ของผู้อนุมัติคนแรก
+            if (approval.Approver != null)
             {
-                // ถ้ามีคนถัดไป สร้าง approval ใหม่
-                var newApproval = new Approval
-                {
-                    DocumentId = approval.DocumentId,
-                    ApproverId = nextApprover.Id,
-                    Status = "Pending",
-                    ApprovalOrder = nextApprover.ApprovalOrder ?? 0,
-                    
-                };
-                _context.Approvals.Add(newApproval);
-
-                // อัปเดต document ให้สถานะยังคง In Review
-                var document = approval.Document;
-                document.Status = "In Review";
-                _context.Documents.Update(document);
+                approval.LastApprover = approval.Approver.Username; // ชื่อของผู้อนุมัติ
             }
             else
             {
-                // ถ้าไม่มีคนถัดไปแล้ว --> อนุมัติเอกสารเลย
-                var document = approval.Document;
-                document.Status = "Approved";
-                _context.Documents.Update(document);
+                approval.LastApprover = "Unknown"; // ถ้าไม่มีข้อมูลผู้อนุมัติ
             }
 
-            await _context.SaveChangesAsync();
+            // บันทึกการอนุมัติลงในฐานข้อมูล
+            _context.Approvals.Update(approval);
+            await _context.SaveChangesAsync(); // บันทึกการอนุมัติของผู้ปัจจุบัน
+
+            // 🔥 เพิ่มการหาผู้อนุมัติคนถัดไป
+            var nextApprover = FindNextApprover(approval.Approver?.ApprovalOrder ?? 0);
+
+            if (nextApprover != null)
+            {
+                // ถ้ามีผู้อนุมัติคนถัดไป ใช้ Approval ตัวเดิมและอัปเดตข้อมูล
+                approval.ApproverId = nextApprover.Id;
+                approval.Status = "Pending"; // รอการอนุมัติ
+                approval.LastApprover = approval.Approver.Username;
+
+                // บันทึกการอัปเดตสำหรับผู้อนุมัติคนถัดไป
+                _context.Approvals.Update(approval);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                // หากไม่มีผู้อนุมัติคนถัดไปให้เปลี่ยนสถานะเอกสารเป็น "Approved"
+                var document = await _context.Documents.FindAsync(approval.DocumentId);
+                if (document != null)
+                {
+                    document.Status = "Approved";
+                    _context.Documents.Update(document);
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            // แจ้งข้อความสำเร็จ
+            TempData["SuccessMessage"] = "อนุมัติเอกสารเรียบร้อยแล้ว";
             return RedirectToAction(nameof(Index));
         }
-
-
-
 
         private User FindNextApprover(int currentOrder)
         {

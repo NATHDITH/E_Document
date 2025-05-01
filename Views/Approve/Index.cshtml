@@ -28,30 +28,16 @@
                 }
 
                 <td>
-                    @if (!string.IsNullOrEmpty(approval.LastApprover) && users != null)
+                    @if (!string.IsNullOrEmpty(approval.LastApprover))
                     {
-                        if (int.TryParse(approval.LastApprover, out var lastApproverId)) // ✅ แปลงเป็น int
-                        {
-                            var approver = users.FirstOrDefault(u => u.Id == lastApproverId);
-                            if (approver != null)
-                            {
-                                @approver.Username
-                            }
-                            else
-                            {
-                                <span class="text-muted">-</span>
-                            }
-                        }
-                        else
-                        {
-                            <span class="text-danger">ID ไม่ถูกต้อง</span>
-                        }
+                        @approval.LastApprover
                     }
                     else
                     {
                         <span class="text-muted">ยังไม่มี</span>
                     }
                 </td>
+
 
                     <td>
                     @if (approval.Status == "Pending" || approval.Status == "In Review")
