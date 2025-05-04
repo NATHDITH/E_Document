@@ -9,6 +9,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting; // เพิ่ม namespace นี้
 using Microsoft.Extensions.Hosting;
+using iText.IO.Image;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
+
 
 
 namespace E_Document.Controllers
@@ -193,9 +199,56 @@ namespace E_Document.Controllers
                 SignedAt = DateTime.Now
             };
             _context.Signatures.Add(signature);
+            // 2. ใส่ลายเซ็น PNG ลงใน PDF
+            // 2. ใส่ลายเซ็น PNG ลงใน PDF และเขียนทับไฟล์เดิม
 
-            // 2. อัปเดต Approval ว่าอนุมัติแล้ว
-            
+            string pdfPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", document.FileName);
+            string tempPdfPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", Guid.NewGuid().ToString() + "_temp.pdf"); // 🔄 temp file
+            string signatureImagePath = Path.Combine(_webHostEnvironment.WebRootPath, signature.SignaturePath.TrimStart('/'));
+
+            using (PdfReader pdfReader = new PdfReader(pdfPath))
+            using (PdfWriter pdfWriter = new PdfWriter(tempPdfPath)) // 🔄 เขียนลงไฟล์ชั่วคราว
+            using (PdfDocument pdfDoc = new PdfDocument(pdfReader, pdfWriter))
+            {
+                var page = pdfDoc.GetFirstPage();
+                var canvas = new Canvas(new PdfCanvas(page), page.GetPageSize());  // ✅ ใช้ 2 พารามิเตอร์
+
+                ImageData imageData = ImageDataFactory.Create(signatureImagePath);
+
+                float x;
+                float y;
+
+                switch (approverId)
+                {
+                    case 3:
+                        x = 90; y = 450;
+                        break;
+                    case 5:
+                        x = 350; y = 450;
+                        break;
+                    default:
+                        x = 400; y = 200;
+                        break;
+                }
+
+                Image image = new Image(imageData);
+                image.SetFixedPosition(x, y);
+                image.ScaleToFit(100, 50);
+                canvas.Add(image);
+            }
+
+            // 🔁 เขียนทับไฟล์เดิม
+            System.IO.File.Delete(pdfPath);
+            System.IO.File.Move(tempPdfPath, pdfPath);
+
+            // ✅ ไม่ต้องเปลี่ยนชื่อไฟล์ใน database แล้ว
+            // document.FileName = "signed_" + document.FileName; <-- ลบบรรทัดนี้ทิ้ง
+            _context.Documents.Update(document);
+            await _context.SaveChangesAsync();
+
+
+            // 4. อัปเดต Approval ว่าอนุมัติแล้ว
+
             var approval = await _context.Approvals
                 .Include(a => a.Document)
                 .Include(a => a.Approver)
@@ -211,7 +264,7 @@ namespace E_Document.Controllers
             approval.ApprovedAt = DateTime.Now;
             approval.LastApprover = approval.Approver?.Username ?? "Unknown";
 
-            // 3. หา Approver ถัดไป
+            // 5. หา Approver ถัดไป
             var nextApprover = FindNextApprover(approval.Approver?.ApprovalOrder ?? 0);
             if (nextApprover != null)
             {

@@ -1272,7 +1272,7 @@ documentDetail._32social.HasValue ? documentDetail._32social.Value : 0);
                 Directory.CreateDirectory(uploadsFolder);
             }
 
-            string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+            string uniqueFileName = file.FileName;
             string filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
