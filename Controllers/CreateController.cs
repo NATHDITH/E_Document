@@ -1266,24 +1266,20 @@ documentDetail._32social.HasValue ? documentDetail._32social.Value : 0);
                 return RedirectToAction("Index");
             }
 
-            // กำหนดโฟลเดอร์ uploads ภายใน wwwroot
             string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
             if (!Directory.Exists(uploadsFolder))
             {
-                Directory.CreateDirectory(uploadsFolder); // สร้างโฟลเดอร์ถ้าไม่มี
+                Directory.CreateDirectory(uploadsFolder);
             }
 
-            // ตั้งชื่อไฟล์ให้ไม่ซ้ำกัน
             string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
             string filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
-            // บันทึกไฟล์ลงในเซิร์ฟเวอร์
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
 
-            // บันทึกข้อมูลเอกสารลงฐานข้อมูล
             var document = new E_Document.Models.Document
             {
                 FileName = file.FileName,
@@ -1292,40 +1288,13 @@ documentDetail._32social.HasValue ? documentDetail._32social.Value : 0);
                 UploadedAt = DateTime.Now
             };
 
-
             _context.Documents.Add(document);
             await _context.SaveChangesAsync();
 
-            // บันทึกข้อมูล Approval (ผู้อนุมัติคนแรก)
-            var firstApprover = await _context.Users
-                .Where(u => u.Role == "Approver")
-                .OrderBy(u => u.ApprovalOrder)
-                .FirstOrDefaultAsync();
-
-            if (firstApprover != null)
-            {
-                var firstApproval = new Approval
-                {
-                    DocumentId = document.Id,
-                    ApproverId = firstApprover.Id,
-                    ApprovalOrder = 1,  // ลำดับที่ 1
-                    Status = "Pending", // สถานะเริ่มต้น
-                    ApprovedAt = null
-                };
-
-                _context.Approvals.Add(firstApproval);
-                await _context.SaveChangesAsync();
-
-
-            }
-            else
-            {
-                ModelState.AddModelError("Approver", "ไม่มีผู้อนุมัติในระบบ");
-                return RedirectToAction("Index");
-            }
-
             return RedirectToAction("Index");
         }
+
+
         [HttpPost]
         public async Task<IActionResult> SubmitDocument(int documentId)
         {
@@ -1335,36 +1304,46 @@ documentDetail._32social.HasValue ? documentDetail._32social.Value : 0);
                 return NotFound();
             }
 
-            // ค้นหาผู้อนุมัติคนแรก (ApprovalOrder = 1)
-            var firstApprover = await _context.Approvals
-                .Where(a => a.DocumentId == documentId && a.ApprovalOrder == 1 && a.Status == "Pending")
+            // เช็คว่ามี Approval คนแรกหรือยัง
+            var existingFirstApproval = await _context.Approvals
+                .Where(a => a.DocumentId == documentId && a.ApprovalOrder == 1)
                 .FirstOrDefaultAsync();
 
-            if (firstApprover == null)
+            if (existingFirstApproval == null)
             {
-                return BadRequest("ไม่มีผู้อนุมัติในระบบ");
+                // ถ้ายังไม่มี Approval คนแรก ➔ สร้างใหม่
+                var firstApprover = await _context.Users
+                    .Where(u => u.Role == "Approver")
+                    .OrderBy(u => u.ApprovalOrder)
+                    .FirstOrDefaultAsync();
+
+                if (firstApprover != null)
+                {
+                    var firstApproval = new Approval
+                    {
+                        DocumentId = document.Id,
+                        ApproverId = firstApprover.Id,
+                        ApprovalOrder = 1,
+                        Status = "Pending",
+                        ApprovedAt = null
+                    };
+
+                    _context.Approvals.Add(firstApproval);
+                }
+                else
+                {
+                    ModelState.AddModelError("Approver", "ไม่มีผู้อนุมัติในระบบ");
+                    return RedirectToAction("Index");
+                }
             }
 
             // เปลี่ยนสถานะเอกสารเป็น "In Review"
             document.Status = "In Review";
             await _context.SaveChangesAsync();
 
-            // ตรวจสอบว่าเอกสารได้รับการอนุมัติครบทุกคนหรือไม่
-            var allApprovals = await _context.Approvals
-                .Where(a => a.DocumentId == documentId && a.Status == "Approved")
-                .ToListAsync();
-
-            var totalApprovers = await _context.Users.CountAsync(u => u.Role == "Approver");
-
-            if (allApprovals.Count == totalApprovers)
-            {
-                // ถ้าอนุมัติครบทุกคนแล้ว เปลี่ยนสถานะเอกสารเป็น "Approved"
-                document.Status = "Approved";
-                await _context.SaveChangesAsync();
-            }
-
             return RedirectToAction("Index");
         }
+
 
 
 

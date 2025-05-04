@@ -6,7 +6,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting; // เพิ่ม namespace นี้
+using Microsoft.Extensions.Hosting;
 
 
 namespace E_Document.Controllers
@@ -16,11 +18,12 @@ namespace E_Document.Controllers
     public class ApproveController : Controller
     {
         private readonly AutoPdfContext _context;
-
+        private readonly IWebHostEnvironment _webHostEnvironment;  // เพิ่มตัวแปรนี้
         // Constructor
-        public ApproveController(AutoPdfContext context)
+        public ApproveController(AutoPdfContext context, IWebHostEnvironment webHostEnvironment)  // เพิ่มตัวแปรนี้ใน constructor
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;  // อินเจ็กต์ใน constructor
         }
 
         public async Task<IActionResult> Index()
@@ -33,56 +36,71 @@ namespace E_Document.Controllers
 
             return View(approvals);
         }
-
-        // อนุมัติเอกสาร
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Approve(int id)
         {
-            var approval = await _context.Approvals.Include(a => a.Document).FirstOrDefaultAsync(a => a.Id == id);
+            // ดึงข้อมูล approval พร้อมทั้งข้อมูลของ Approver
+            var approval = await _context.Approvals
+                .Include(a => a.Document)
+                .Include(a => a.Approver) // ดึงข้อมูล Approver มาด้วย
+                .FirstOrDefaultAsync(a => a.Id == id);
+
             if (approval == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "ไม่พบข้อมูลการอนุมัติ";
+                return RedirectToAction(nameof(Index));
             }
 
-            // อัปเดต approval ของคนนี้
-            approval.Status = "Approved";
+            // อัปเดตสถานะของการอนุมัติ
+            approval.Status = "Approved"; // หรือสถานะที่คุณต้องการให้เปลี่ยน
+            approval.LastApprover = approval.Approver.Username;
             approval.ApprovedAt = DateTime.Now;
-            _context.Update(approval);
 
-            // หา next approver
-            var nextApprover = FindNextApprover(approval.ApprovalOrder);
-
-            if (nextApprover != null)
+            // อัปเดต LastApprover ของผู้อนุมัติคนแรก
+            if (approval.Approver != null)
             {
-                // ถ้ามีคนถัดไป สร้าง approval ใหม่
-                var newApproval = new Approval
-                {
-                    DocumentId = approval.DocumentId,
-                    ApproverId = nextApprover.Id,
-                    Status = "Pending",
-                    ApprovalOrder = nextApprover.ApprovalOrder ?? 0,
-                    
-                };
-                _context.Approvals.Add(newApproval);
-
-                // อัปเดต document ให้สถานะยังคง In Review
-                var document = approval.Document;
-                document.Status = "In Review";
-                _context.Documents.Update(document);
+                approval.LastApprover = approval.Approver.Username; // ชื่อของผู้อนุมัติ
             }
             else
             {
-                // ถ้าไม่มีคนถัดไปแล้ว --> อนุมัติเอกสารเลย
-                var document = approval.Document;
-                document.Status = "Approved";
-                _context.Documents.Update(document);
+                approval.LastApprover = "Unknown"; // ถ้าไม่มีข้อมูลผู้อนุมัติ
             }
 
-            await _context.SaveChangesAsync();
+            // บันทึกการอนุมัติลงในฐานข้อมูล
+            _context.Approvals.Update(approval);
+            await _context.SaveChangesAsync(); // บันทึกการอนุมัติของผู้ปัจจุบัน
+
+            // 🔥 เพิ่มการหาผู้อนุมัติคนถัดไป
+            var nextApprover = FindNextApprover(approval.Approver?.ApprovalOrder ?? 0);
+
+            if (nextApprover != null)
+            {
+                // ถ้ามีผู้อนุมัติคนถัดไป ใช้ Approval ตัวเดิมและอัปเดตข้อมูล
+                approval.ApproverId = nextApprover.Id;
+                approval.Status = "Pending"; // รอการอนุมัติ
+                approval.LastApprover = approval.Approver.Username;
+
+                // บันทึกการอัปเดตสำหรับผู้อนุมัติคนถัดไป
+                _context.Approvals.Update(approval);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                // หากไม่มีผู้อนุมัติคนถัดไปให้เปลี่ยนสถานะเอกสารเป็น "Approved"
+                var document = await _context.Documents.FindAsync(approval.DocumentId);
+                if (document != null)
+                {
+                    document.Status = "Approved";
+                    _context.Documents.Update(document);
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            // แจ้งข้อความสำเร็จ
+            TempData["SuccessMessage"] = "อนุมัติเอกสารเรียบร้อยแล้ว";
             return RedirectToAction(nameof(Index));
         }
-
-
-
 
         private User FindNextApprover(int currentOrder)
         {
@@ -138,6 +156,82 @@ namespace E_Document.Controllers
             TempData["SuccessMessage"] = "เอกสารถูกปฏิเสธเรียบร้อยแล้ว";
             return RedirectToAction("Index");
         }
+        [HttpPost]
+        public async Task<IActionResult> SaveSignature(int documentId, string signatureData)
+        {
+            if (string.IsNullOrEmpty(signatureData))
+            {
+                TempData["ErrorMessage"] = "ไม่พบลายเซ็น";
+                return RedirectToAction("Index");
+            }
+
+            var document = await _context.Documents.FindAsync(documentId);
+            if (document == null)
+            {
+                TempData["ErrorMessage"] = "ไม่พบเอกสาร";
+                return RedirectToAction("Index");
+            }
+
+            // 1. บันทึกลายเซ็น
+            string fileName = Guid.NewGuid().ToString() + ".png";
+            string folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "signatures");
+
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            string filePath = Path.Combine(folderPath, fileName);
+            byte[] imageBytes = Convert.FromBase64String(signatureData.Replace("data:image/png;base64,", ""));
+            await System.IO.File.WriteAllBytesAsync(filePath, imageBytes);
+            var approverId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var signature = new Signature
+            {
+                DocumentId = documentId,
+                ApproverId = approverId,
+                SignaturePath = "/signatures/" + fileName,
+                SignedAt = DateTime.Now
+            };
+            _context.Signatures.Add(signature);
+
+            // 2. อัปเดต Approval ว่าอนุมัติแล้ว
+            
+            var approval = await _context.Approvals
+                .Include(a => a.Document)
+                .Include(a => a.Approver)
+                .FirstOrDefaultAsync(a => a.DocumentId == documentId && a.ApproverId == approverId && a.Status == "Pending");
+
+            if (approval == null)
+            {
+                TempData["ErrorMessage"] = "ไม่พบข้อมูลการอนุมัติของคุณ";
+                return RedirectToAction("Index");
+            }
+
+            approval.Status = "Approved";
+            approval.ApprovedAt = DateTime.Now;
+            approval.LastApprover = approval.Approver?.Username ?? "Unknown";
+
+            // 3. หา Approver ถัดไป
+            var nextApprover = FindNextApprover(approval.Approver?.ApprovalOrder ?? 0);
+            if (nextApprover != null)
+            {
+                approval.ApproverId = nextApprover.Id;
+                approval.Status = "Pending";
+                approval.LastApprover = approval.Approver.Username;
+            }
+            else
+            {
+                document.Status = "Approved";
+                _context.Documents.Update(document);
+            }
+
+            _context.Approvals.Update(approval);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "ลายเซ็นและการอนุมัติถูกบันทึกเรียบร้อยแล้ว";
+            return RedirectToAction("Index");
+        }
+
 
 
 
