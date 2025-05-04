@@ -3,6 +3,10 @@
     Layout = "_Layout";
     var users = ViewBag.Users as List<E_Document.Models.User>; // ✅ แปลง ViewBag.Users เป็น List<User>
 }
+<head>
+    <!-- Add Signature Pad CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+</head>
 
 <h1>เอกสารที่ต้องอนุมัติ</h1>
 
@@ -42,13 +46,27 @@
                     <td>
                     @if (approval.Status == "Pending" || approval.Status == "In Review")
                     {
-                <form asp-action="Approve" asp-route-id="@approval.Id" method="post" style="display:inline;">
+                @* <form asp-action="Approve" asp-route-id="@approval.Id" method="post" style="display:inline;">
                     <button type="submit" class="btn btn-success">อนุมัติ</button>
-                </form>
+                </form> *@
 
                 <form asp-action="Reject" asp-route-id="@approval.Id" method="post" style="display:inline;">
                     <button type="submit" class="btn btn-danger">ปฏิเสธ</button>
                 </form>
+
+                        <!-- ฟอร์มสำหรับลายเซ็น -->
+                        <form asp-action="SaveSignature" asp-controller="Approve" method="post" enctype="multipart/form-data" class="signature-form" style="margin-top:5px;">
+                            <input type="hidden" name="documentId" value="@approval.DocumentId" />
+
+                            <canvas class="signature-pad" width="400" height="150" style="border:1px solid #000;"></canvas>
+                            <br>
+                            <button type="button" class="clear btn btn-warning btn-sm">ล้างลายเซ็น</button>
+                            <button type="submit" class="btn btn-success btn-sm">อนุมัติและบันทึกลายเซ็น</button>
+
+
+                            <input type="hidden" class="signature-data" name="signatureData" />
+                        </form>
+
                     }
     </td>
 
@@ -56,3 +74,28 @@
         }
     </tbody>
 </table>
+<script>
+    // Loop through each signature pad form
+    document.querySelectorAll('.signature-form').forEach(form => {
+        const canvas = form.querySelector('.signature-pad');
+        const signaturePad = new SignaturePad(canvas);
+
+        // Clear the signature pad
+        form.querySelector('.clear').addEventListener('click', () => {
+            signaturePad.clear();
+        });
+
+        // Before submitting the form, save the signature as Base64
+        form.addEventListener('submit', function (e) {
+            // Only add the signature data if there is a signature
+            const signatureDataInput = form.querySelector('.signature-data');
+            if (!signaturePad.isEmpty()) {
+                signatureDataInput.value = signaturePad.toDataURL(); // Convert signature to Base64
+            } else {
+                alert("กรุณาวาดลายเซ็น");
+                e.preventDefault(); // Prevent form submission if no signature
+            }
+        });
+    });
+</script>
+
