@@ -5,6 +5,10 @@
 <h2>สร้างเอกสารโครงการ</h2>
 
 <form asp-action="GenerateDisbursePdf" method="post">
+    <div class="card shadow p-4 bg-light">
+
+
+        <div class="card-body">
     <div class="form-group">
         <label for="ProjectCode">เลือกโครงการ:</label>
         <select id="ProjectCode" name="ProjectCode" class="form-control">
@@ -176,6 +180,8 @@
         <label class="form-label">วันที่ออกหนังสือเบิกค่าใช้จ่ายโครงการ:</label>
         <input type="date" name="CreateDateDis" class="form-control" required id="CreateDateDis" />
     </div>
+    </div>
+    </div>
     <button type="submit" class="btn btn-primary mt-3">Submit</button>
 </form>
 
@@ -315,3 +321,30 @@
         });
     </script>
 }
+
+<style>
+    .custom-header {
+        background-color: #66bb6a; /* เขียวอ่อน */
+        color: white;
+        padding: 10px;
+        border-radius: 6px;
+    }
+
+    .blue-input {
+        border: 1px solid #2196f3;
+        background-color: #e3f2fd;
+        color: #0d47a1;
+    }
+
+    .blue-label {
+        color: #0d47a1;
+    }
+
+    body {
+        background-image: url('/images/background4.jpg'); /* เปลี่ยน path ให้ตรง */
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+    }
+</style>

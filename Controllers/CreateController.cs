@@ -134,8 +134,7 @@ namespace E_Document.Controllers
                     string fontPath = "wwwroot/fonts/THSarabunNew.ttf"; // เส้นทางฟอนต์
                     PdfFont thaiFont = PdfFontFactory.CreateFont(fontPath, PdfEncodings.IDENTITY_H); // ฝังฟอนต์
                     PdfFont normalFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
-                    document.Add(new Paragraph("\n")); // เพิ่มบรรทัดว่าง
-                    document.Add(new Paragraph("\n")); // เพิ่มบรรทัดว่าง
+                    
                     document.Add(new Paragraph()
                         .Add(new Text("ที่ สภ.มก.ศรช. ").SetFont(thaiFont)) // ข้อความ "ที่"
                         .Add(new Text(model.DocNo ?? "N/A").SetFont(thaiFont).SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER)) // ฟอนต์ไทยและจัดตรงกลาง
@@ -185,7 +184,9 @@ namespace E_Document.Controllers
         .Add(new Text(formattedDateend).SetFont(thaiFont))
         .Add(new Text(" ตามแผนการใช้เงินบำรุงกิจกรรมนิสิต ปีการศึกษา 2567 โดยมีวงเงินค่าใช้จ่ายจำนวน  ").SetFont(thaiFont))
     .Add(new Text($"{(model.Maintenancemoney.HasValue && model.Maintenancemoney > 0 ? model.Maintenancemoney.Value.ToString("N2") : "N/A")} บาท").SetFont(thaiFont))
-
+    .Add(new Text(" ( ").SetFont(thaiFont))
+        .Add(new Text(model.Maintenancemoneytext).SetFont(thaiFont))
+        .Add(new Text(" ) ").SetFont(thaiFont))
         .Add(new Text(" ตามรายละเอียดของโครงการดังแนบและขอแต่งตั้งคณะกรรมการตรวจรับ จำนวน 3 คน ได้แก่ ").SetFont(thaiFont))
         .SetFontSize(12)
         .SetMultipliedLeading(1.0f)
@@ -234,6 +235,7 @@ namespace E_Document.Controllers
                     document.Add(new Paragraph()
         .SetFirstLineIndent(65) // เยื้องบรรทัดแรก
         .Add(new Text("จึงเรียนมาเพื่อโปรดพิจารณา  ").SetFont(thaiFont)));
+                    document.Add(new Paragraph("\n")); // เพิ่มบรรทัดว่าง
 
                     Table signTable = new Table(2); // ตาราง 2 คอลัมน์
                     signTable.SetWidth(UnitValue.CreatePercentValue(100));
@@ -310,6 +312,7 @@ namespace E_Document.Controllers
                         .SetBorder(Border.NO_BORDER) // ไม่มีเส้นขอบ
                         .SetTextAlignment(TextAlignment.CENTER) // จัดข้อความตรงกลาง
                         .Add(new Paragraph("ลงชื่อ .................................\n").SetFont(thaiFont).SetMultipliedLeading(1.0f))
+                        .Add(new Paragraph("\n")) // เพิ่มบรรทัดว่าง
                         .Add(new Paragraph($"\n{approve6 ?? "N/A"}").SetFont(thaiFont).SetMultipliedLeading(1.0f))
                         .Add(new Paragraph("หัวหน้างานบริหารกิจการนิสิตและการกีฬา").SetFont(thaiFont).SetMultipliedLeading(1.0f))
                         .Add(new Paragraph(".../..../....").SetFont(thaiFont).SetMultipliedLeading(1.0f));
@@ -319,6 +322,7 @@ namespace E_Document.Controllers
                         .SetBorder(Border.NO_BORDER) // ไม่มีเส้นขอบ
                         .SetTextAlignment(TextAlignment.CENTER) // จัดข้อความตรงกลาง
                         .Add(new Paragraph("ลงชื่อ .................................\n").SetFont(thaiFont).SetMultipliedLeading(1.0f))
+                        .Add(new Paragraph("\n")) // เพิ่มบรรทัดว่าง
                         .Add(new Paragraph($"\n{approve5 ?? "N/A"}").SetFont(thaiFont).SetMultipliedLeading(1.0f))
                         .Add(new Paragraph("ผู้อำนวยการกองบริหารการศึกษาและพัฒนานิสิต").SetFont(thaiFont).SetMultipliedLeading(1.0f))
                         .Add(new Paragraph(".../..../....").SetFont(thaiFont).SetMultipliedLeading(1.0f));
@@ -360,7 +364,7 @@ namespace E_Document.Controllers
                     //ช่องที่ 4
                     signTable.AddCell(new Cell()
                         .Add(new Paragraph("4)เรียนผู้ช่วยอธิการบดีฝ่ายกิจการนิสิต ฯ\n" +
-                        "เพื่อโปรดพิจารณา\n\n\n")
+                        "เพื่อโปรดพิจารณา\n\n\n\n")
                             .SetFont(thaiFont).SetMultipliedLeading(1.0f))
 
                         .Add(new Paragraph($"{approve3 ?? "N/A"}")
@@ -375,7 +379,7 @@ namespace E_Document.Controllers
                         .Add(new Paragraph("5)เรียนรองอธิการบดี ฯ\n" +
                         "เพื่อโปรดพิจารณา\n") // ใช้ \n เพื่อขึ้นบรรทัดใหม่
                             .SetFont(thaiFont).SetMultipliedLeading(1.0f))
-
+                        .Add(new Paragraph("\n")) // เพิ่มบรรทัดว่าง
                         .Add(new Paragraph($"{approve2 ?? "N/A"}")
                             .SetFont(thaiFont).SetMultipliedLeading(1.0f)
                             .SetTextAlignment(TextAlignment.CENTER))
@@ -391,7 +395,7 @@ namespace E_Document.Controllers
                     signTable.AddCell(new Cell()
                         .Add(new Paragraph("อนุมัติ\n\n\n")
                             .SetFont(thaiFont).SetMultipliedLeading(1.0f).SetTextAlignment(TextAlignment.CENTER))
-
+                        .Add(new Paragraph("\n")) // เพิ่มบรรทัดว่าง
                         .Add(new Paragraph($"\n {approve1 ?? "N/A"}")
                             .SetFont(thaiFont).SetMultipliedLeading(1.0f)
                             .SetTextAlignment(TextAlignment.CENTER))
@@ -409,44 +413,44 @@ namespace E_Document.Controllers
 
 
 
-                    document.Add(new Paragraph("แบบเสนอโครงการกิจกรรมนิสิต\n")
-                            .SetFont(thaiFont)
-                            .SetMultipliedLeading(1.0f)
-                            .SetTextAlignment(TextAlignment.CENTER));
-                    document.Add(new Paragraph("มหาวิทยาลัยเกษตรศาสตร์ วิทยาเขตศรีราชา\n")
-                            .SetFont(thaiFont)
-                            .SetMultipliedLeading(1.0f)
-                            .SetTextAlignment(TextAlignment.CENTER));
+        //            document.Add(new Paragraph("แบบเสนอโครงการกิจกรรมนิสิต\n")
+        //                    .SetFont(thaiFont)
+        //                    .SetMultipliedLeading(1.0f)
+        //                    .SetTextAlignment(TextAlignment.CENTER));
+        //            document.Add(new Paragraph("มหาวิทยาลัยเกษตรศาสตร์ วิทยาเขตศรีราชา\n")
+        //                    .SetFont(thaiFont)
+        //                    .SetMultipliedLeading(1.0f)
+        //                    .SetTextAlignment(TextAlignment.CENTER));
 
-                    Paragraph committee2Paragraph = new Paragraph()
-        .SetTextAlignment(TextAlignment.LEFT)
-        .SetMultipliedLeading(1.5f) // ระยะห่างระหว่างบรรทัด
-        .Add(new Tab()) // ขยับเลขไปที่ตำแหน่งแรก
-        .Add(new Text("1. ").SetFont(thaiFont))
-        .Add(new Tab()) // ขยับชื่อไปที่ตำแหน่งที่ 2
-        .Add(new Text("ผศ.ดร.นัฎฐวิกา จันทร์ศรี").SetFont(thaiFont))
+        //            Paragraph committee2Paragraph = new Paragraph()
+        //.SetTextAlignment(TextAlignment.LEFT)
+        //.SetMultipliedLeading(1.5f) // ระยะห่างระหว่างบรรทัด
+        //.Add(new Tab()) // ขยับเลขไปที่ตำแหน่งแรก
+        //.Add(new Text("1. ").SetFont(thaiFont))
+        //.Add(new Tab()) // ขยับชื่อไปที่ตำแหน่งที่ 2
+        //.Add(new Text("ผศ.ดร.นัฎฐวิกา จันทร์ศรี").SetFont(thaiFont))
 
-        .Add(new Text("\n"))
-        .Add(new Tab())
-        .Add(new Text("2. ").SetFont(thaiFont))
-        .Add(new Tab())
-        .Add(new Text("นายนนทกร บุญมาก").SetFont(thaiFont))
+        //.Add(new Text("\n"))
+        //.Add(new Tab())
+        //.Add(new Text("2. ").SetFont(thaiFont))
+        //.Add(new Tab())
+        //.Add(new Text("นายนนทกร บุญมาก").SetFont(thaiFont))
 
-        .Add(new Text("\n"))
-        .Add(new Tab())
-        .Add(new Text("3. ").SetFont(thaiFont))
-        .Add(new Tab())
-        .Add(new Text("นายชนัญชัย ดอนมงคล").SetFont(thaiFont))
-        ;
+        //.Add(new Text("\n"))
+        //.Add(new Tab())
+        //.Add(new Text("3. ").SetFont(thaiFont))
+        //.Add(new Tab())
+        //.Add(new Text("นายชนัญชัย ดอนมงคล").SetFont(thaiFont))
+        //;
 
-                    //กำหนดตำแหน่งของแต่ละ Tab
-                    committee2Paragraph.AddTabStops(
-                        new TabStop(-100, TabAlignment.LEFT),  // เลข 1, 2, 3
-                        new TabStop(50, TabAlignment.LEFT) // ชื่อ
+        //            //กำหนดตำแหน่งของแต่ละ Tab
+        //            committee2Paragraph.AddTabStops(
+        //                new TabStop(-100, TabAlignment.LEFT),  // เลข 1, 2, 3
+        //                new TabStop(50, TabAlignment.LEFT) // ชื่อ
 
-                    );
+        //            );
 
-                    document.Add(committeeParagraph);
+        //            document.Add(committeeParagraph);
 
 
 
@@ -573,24 +577,36 @@ namespace E_Document.Controllers
                 );
                 var culture = new System.Globalization.CultureInfo("th-TH");
 
-                string formattedDatenow = documentDetail.CreateDateDis.HasValue
-                    ? documentDetail.CreateDateDis.Value.ToString("dd MMMM yyyy", culture)
-                    : "N/A";
+                    string formattedDatenow = documentDetail.CreateDateDis.HasValue
+        ? $"{documentDetail.CreateDateDis.Value.ToString("dd MMMM", culture)} {documentDetail.CreateDateDis.Value.Year + 543}"
+        : "N/A";
 
-                string formattedDateCreate = documentDetail.CreateDate.HasValue
-                    ? documentDetail.CreateDate.Value.ToString("dd MMMM yyyy", culture)
-                    : "N/A";
+                    string formattedDateCreate = documentDetail.CreateDate.HasValue
+                        ? $"{documentDetail.CreateDate.Value.ToString("ddddที่ d MMMM", culture)} {documentDetail.CreateDate.Value.Year + 543}"
+                        : "N/A";
 
-                string formattedDatestart = documentDetail.StartDate.HasValue
-                    ? documentDetail.StartDate.Value.ToString("ddddที่ d MMMM yyyy", culture)
-                    : "N/A";
+                    string formattedDatestart = documentDetail.StartDate.HasValue
+                        ? $"{documentDetail.StartDate.Value.ToString("ddddที่ d MMMM", culture)} {documentDetail.StartDate.Value.Year + 543}"
+                        : "N/A";
 
-                string formattedDateend = documentDetail.EndDate.HasValue
-                    ? documentDetail.EndDate.Value.ToString("ddddที่ d MMMM yyyy", culture)
-                    : "N/A";
+                    string formattedDateend = documentDetail.EndDate.HasValue
+                        ? $"{documentDetail.EndDate.Value.ToString("ddddที่ d MMMM", culture)} {documentDetail.EndDate.Value.Year + 543}"
+                        : "N/A";
 
 
-                document.Add(new Paragraph("วันที่ ")
+                    //                string formattedDatenow = model.CreateDate.HasValue
+                    //? $"{model.CreateDate.Value.ToString("dd MMMM", culture)} {model.CreateDate.Value.Year + 543}"
+                    //: "N/A";
+
+                    //                string formattedDatestart = model.StartDate.HasValue
+                    //                    ? $"{model.StartDate.Value.ToString("ddddที่ d MMMM", culture)} {model.StartDate.Value.Year + 543}"
+                    //                    : "N/A";
+
+                    //                string formattedDateend = model.EndDate.HasValue
+                    //                    ? $"{model.EndDate.Value.ToString("ddddที่ d MMMM", culture)} {model.EndDate.Value.Year + 543}"
+                    //                    : "N/A";
+
+                    document.Add(new Paragraph("วันที่ ")
                     .Add(new Text(formattedDatenow).SetFont(thaiFont))  // แสดงวันที่ที่แปลงแล้ว
                     .SetFont(thaiFont)
                     .SetFontSize(12)
@@ -607,14 +623,14 @@ namespace E_Document.Controllers
     .SetFirstLineIndent(65) // เยื้องบรรทัดแรก
     .Add(new Text("ตามที่สภาผู้แทนนิสิต องค์กรนิสิต ได้รับอนุมัติหลักการและวงเงินค่าใช้จ่ายโครงการ ").SetFont(thaiFont))
     .Add(new Text(documentDetail.ProjectName ?? "N/A").SetFont(thaiFont))
-    .Add(new Text("  ตามหนังสือเลขที่  ").SetFont(thaiFont))
+    .Add(new Text("  ตามหนังสือเลขที่ สภ.มก.ศรช. ").SetFont(thaiFont))
 
 
     .Add(new Text(documentDetail.DocNo ?? "N/A").SetFont(thaiFont))
 
 
     .Add(new Text(" / 2568 ลว.  ").SetFont(thaiFont))
-    .Add(new Text(formattedDateend).SetFont(thaiFont)) // ✅ แปลงเป็น string พร้อม formatting
+    .Add(new Text(formattedDateCreate).SetFont(thaiFont)) // ✅ แปลงเป็น string พร้อม formatting
     .Add(new Text(" เรื่อง ขออนุมัติหลักการและวงเงินค่าใช้จ่ายโครงการ  ").SetFont(thaiFont)
     ).Add(new Text(documentDetail.ProjectName ?? "N/A").SetFont(thaiFont))
 
@@ -627,7 +643,10 @@ namespace E_Document.Controllers
     .SetFirstLineIndent(65) // เยื้องบรรทัดแรก
     .Add(new Text("บัดนี้การดำเนินโครงการดังกล่าวเสร็จสิ้นเรียบร้อยแล้ว จึงใคร่ขอรายงานผลการดำเนินงานและขออนุมัติเบิกค่าใช้จ่ายเงินบำรุงกิจกรรมนิสิต ปีการศึกษา 2568 เป็นจำนวนเงินทั้งสิ้น ").SetFont(thaiFont))
     .Add(new Text(" ตามแผนการใช้เงินบำรุงกิจกรรมนิสิต ปีการศึกษา 2568 โดยมีวงเงินค่าใช้จ่ายจำนวน  ").SetFont(thaiFont)).Add(new Text($"{(documentDetail.Maintenancemoney > 0 ? ((decimal)documentDetail.Maintenancemoney).ToString("N2") : "N/A")} บาท").SetFont(thaiFont))
-
+    .Add(new Text(" ( ").SetFont(thaiFont))
+        .Add(new Text(documentDetail.Maintenancemoneytext).SetFont(thaiFont))
+        .Add(new Text(" ) ").SetFont(thaiFont))
+        .Add(new Text("พร้อมได้แนบรายงานผลการจัดโครงการและหลักฐานประกอบการเบิกจ่ายมาด้วย ").SetFont(thaiFont))
     .SetFontSize(12)
     .SetMultipliedLeading(1.0f)
     .SetTextAlignment(TextAlignment.LEFT));
@@ -647,172 +666,174 @@ namespace E_Document.Controllers
                     Table signTable = new Table(2); // ตาราง 2 คอลัมน์
                 signTable.SetWidth(UnitValue.CreatePercentValue(100));
 
-                //signTable.AddCell(new Cell()
-                //    .SetBorder(Border.NO_BORDER)
-                //    .Add(new Paragraph("ลงชื่อ .................................\n")
-                //        .SetFont(thaiFont)
+                    //signTable.AddCell(new Cell()
+                    //    .SetBorder(Border.NO_BORDER)
+                    //    .Add(new Paragraph("ลงชื่อ .................................\n")
+                    //        .SetFont(thaiFont)
 
-                //        .SetMultipliedLeading(1.0f)
-                //        .SetTextAlignment(TextAlignment.CENTER))
-                //    .Add(new Paragraph($"{approve8 ?? "N/A"}")
-                //        .SetFont(thaiFont)
-                //        .SetMultipliedLeading(1.0f)
-                //        .SetTextAlignment(TextAlignment.CENTER))
-                //    .Add(new Paragraph("อาจารที่ปรึกษา")
-                //        .SetFont(thaiFont)
-                //        .SetMultipliedLeading(1.0f)
-                //        .SetTextAlignment(TextAlignment.CENTER))
-                //    .Add(new Paragraph(".../..../....")
-                //        .SetFont(thaiFont)
-                //        .SetMultipliedLeading(1.0f)
-                //        .SetTextAlignment(TextAlignment.CENTER))
-                //);
-                //signTable.AddCell(new Cell()
-                //    .SetBorder(Border.NO_BORDER)
-                //    .Add(new Paragraph("ลงชื่อ .................................\n") // ใช้ \n เพื่อขึ้นบรรทัดใหม่
-                //        .SetFont(thaiFont)
-                //        .SetMultipliedLeading(1.0f)
-                //        .SetTextAlignment(TextAlignment.CENTER))
-                //    .Add(new Paragraph($"{approve9 ?? "N/A"}")
-                //        .SetFont(thaiFont)
-                //        .SetMultipliedLeading(1.0f)
-                //        .SetTextAlignment(TextAlignment.CENTER))
-                //    .Add(new Paragraph("ประธานสภาผู้แทนนิสิต องค์การนิสิต")
-                //        .SetFont(thaiFont)
-                //        .SetMultipliedLeading(1.0f)
-                //        .SetTextAlignment(TextAlignment.CENTER))
-                //    .Add(new Paragraph(".../..../....")
-                //        .SetFont(thaiFont)
-                //        .SetMultipliedLeading(1.0f)
-                //        .SetTextAlignment(TextAlignment.CENTER))
-                //);
-
-
-
-                // ช่องที่ 1
-                signTable.AddCell(new Cell()
-                    .Add(new Paragraph("1)ได้ตรวจสอบรายละเอียดของโครงการแล้ว\n" +
-                    "☐ เห็นสมควรอนุมัติ\n" +
-                    "☐ อื่น ๆ (ระบุ) ........................................\n" +
-                    "\n") // ใช้ \n เพื่อขึ้นบรรทัดใหม่
-                        .SetFont(thaiFont).SetMultipliedLeading(1.0f))
-
-                    .Add(new Paragraph($"{approve7 ?? "N/A"}")
-                        .SetFont(thaiFont).SetMultipliedLeading(1.0f)
-                        .SetTextAlignment(TextAlignment.CENTER))
-                    .Add(new Paragraph("นักวิชาการศึกษา ชำนาญการ")
-                        .SetFont(thaiFont).SetMultipliedLeading(1.0f)
-                        .SetTextAlignment(TextAlignment.CENTER))
-                    .Add(new Paragraph(".../..../....")
-                        .SetFont(thaiFont).SetMultipliedLeading(1.0f)
-                        .SetTextAlignment(TextAlignment.CENTER))
-                );
-
-                // ช่องที่ 2
-
-                // ช่องที่ 2 (2 ลายเซ็น ซ้าย-ขวา และอยู่ตรงกลาง)
-                Table innerTable = new Table(2); // ตารางย่อย 2 คอลัมน์
-                innerTable.SetWidth(UnitValue.CreatePercentValue(100));
-
-                // ลายเซ็นทางซ้าย (จัดตรงกลาง)
-                Cell leftCell = new Cell()
-                    .SetBorder(Border.NO_BORDER) // ไม่มีเส้นขอบ
-                    .SetTextAlignment(TextAlignment.CENTER) // จัดข้อความตรงกลาง
-                    .Add(new Paragraph("ลงชื่อ .................................\n").SetFont(thaiFont).SetMultipliedLeading(1.0f))
-                    .Add(new Paragraph($"{approve6 ?? "N/A"}").SetFont(thaiFont).SetMultipliedLeading(1.0f))
-                    .Add(new Paragraph("หัวหน้างานบริหารกิจการนิสิตและการกีฬา").SetFont(thaiFont).SetMultipliedLeading(1.0f))
-                    .Add(new Paragraph(".../..../....").SetFont(thaiFont).SetMultipliedLeading(1.0f));
-
-                // ลายเซ็นทางขวา (จัดตรงกลาง)
-                Cell rightCell = new Cell()
-                    .SetBorder(Border.NO_BORDER) // ไม่มีเส้นขอบ
-                    .SetTextAlignment(TextAlignment.CENTER) // จัดข้อความตรงกลาง
-                    .Add(new Paragraph("ลงชื่อ .................................\n").SetFont(thaiFont).SetMultipliedLeading(1.0f))
-                    .Add(new Paragraph($"{approve5 ?? "N/A"}").SetFont(thaiFont).SetMultipliedLeading(1.0f))
-                    .Add(new Paragraph("ผู้อำนวยการกองบริหารการศึกษาและพัฒนานิสิต").SetFont(thaiFont).SetMultipliedLeading(1.0f))
-                    .Add(new Paragraph(".../..../....").SetFont(thaiFont).SetMultipliedLeading(1.0f));
-
-                // เพิ่มเซลล์ซ้าย-ขวาเข้าตารางย่อย
-                innerTable.AddCell(leftCell);
-                innerTable.AddCell(rightCell);
-
-                // เพิ่มตารางย่อยลงในตารางหลัก
-                signTable.AddCell(new Cell()
-                    .SetTextAlignment(TextAlignment.LEFT) // จัดข้อความของเซลล์หลักให้อยู่ตรงกลาง
-                    .Add(new Paragraph("2) ตรวจสอบให้เป็นไปตามแผนการจัดกิจกรรม\n").SetFont(thaiFont).SetMultipliedLeading(1.0f))
-                    .Add(innerTable) // ใส่ตารางย่อยที่มี 2 คอลัมน์ (ซ้าย-ขวา)
-                );
+                    //        .SetMultipliedLeading(1.0f)
+                    //        .SetTextAlignment(TextAlignment.CENTER))
+                    //    .Add(new Paragraph($"{approve8 ?? "N/A"}")
+                    //        .SetFont(thaiFont)
+                    //        .SetMultipliedLeading(1.0f)
+                    //        .SetTextAlignment(TextAlignment.CENTER))
+                    //    .Add(new Paragraph("อาจารที่ปรึกษา")
+                    //        .SetFont(thaiFont)
+                    //        .SetMultipliedLeading(1.0f)
+                    //        .SetTextAlignment(TextAlignment.CENTER))
+                    //    .Add(new Paragraph(".../..../....")
+                    //        .SetFont(thaiFont)
+                    //        .SetMultipliedLeading(1.0f)
+                    //        .SetTextAlignment(TextAlignment.CENTER))
+                    //);
+                    //signTable.AddCell(new Cell()
+                    //    .SetBorder(Border.NO_BORDER)
+                    //    .Add(new Paragraph("ลงชื่อ .................................\n") // ใช้ \n เพื่อขึ้นบรรทัดใหม่
+                    //        .SetFont(thaiFont)
+                    //        .SetMultipliedLeading(1.0f)
+                    //        .SetTextAlignment(TextAlignment.CENTER))
+                    //    .Add(new Paragraph($"{approve9 ?? "N/A"}")
+                    //        .SetFont(thaiFont)
+                    //        .SetMultipliedLeading(1.0f)
+                    //        .SetTextAlignment(TextAlignment.CENTER))
+                    //    .Add(new Paragraph("ประธานสภาผู้แทนนิสิต องค์การนิสิต")
+                    //        .SetFont(thaiFont)
+                    //        .SetMultipliedLeading(1.0f)
+                    //        .SetTextAlignment(TextAlignment.CENTER))
+                    //    .Add(new Paragraph(".../..../....")
+                    //        .SetFont(thaiFont)
+                    //        .SetMultipliedLeading(1.0f)
+                    //        .SetTextAlignment(TextAlignment.CENTER))
+                    //);
 
 
 
+                    // ช่องที่ 1
+                    signTable.AddCell(new Cell()
+                            .Add(new Paragraph("1)ได้ตรวจสอบรายละเอียดของโครงการแล้ว\n" +
+                            "☐ เห็นสมควรอนุมัติ\n" +
+                            "☐ อื่น ๆ (ระบุ) ........................................\n" +
+                            "\n") // ใช้ \n เพื่อขึ้นบรรทัดใหม่
+                                .SetFont(thaiFont).SetMultipliedLeading(1.0f))
 
-                // ช่องที่ 3
-                signTable.AddCell(new Cell()
-                    .Add(new Paragraph("3)ตรวจสอบแผนการใช้งบประมาณ\n" +
-                    "☐ 1) เงินบำรุงกิจกรรมนิสิต      \n" +
-                    "☐ 2) เงินสะสมองค์กร          \n" +
-                    "☐ 3) แหล่งอื่นๆ รายการ...............................\n" +
-                    "\n") // ใช้ \n เพื่อขึ้นบรรทัดใหม่
-                        .SetFont(thaiFont).SetMultipliedLeading(1.0f))
+                            .Add(new Paragraph($"{approve7 ?? "N/A"}")
+                                .SetFont(thaiFont).SetMultipliedLeading(1.0f)
+                                .SetTextAlignment(TextAlignment.CENTER))
+                            .Add(new Paragraph("นักวิชาการศึกษา ชำนาญการ")
+                                .SetFont(thaiFont).SetMultipliedLeading(1.0f)
+                                .SetTextAlignment(TextAlignment.CENTER))
+                            .Add(new Paragraph(".../..../....")
+                                .SetFont(thaiFont).SetMultipliedLeading(1.0f)
+                                .SetTextAlignment(TextAlignment.CENTER))
+                        );
 
-                    .Add(new Paragraph($"{approve4 ?? "N/A"}")
-                        .SetFont(thaiFont).SetMultipliedLeading(1.0f)
-                        .SetTextAlignment(TextAlignment.CENTER))
-                    .Add(new Paragraph("นักวิชาการเงินและบัญชี")
-                        .SetFont(thaiFont).SetMultipliedLeading(1.0f)
-                        .SetTextAlignment(TextAlignment.CENTER))
-                    .Add(new Paragraph(".../..../....")
-                        .SetFont(thaiFont).SetMultipliedLeading(1.0f)
-                        .SetTextAlignment(TextAlignment.CENTER))
-                );
+                    //ช่องที่ 2
 
-                // ช่องที่ 4
-                signTable.AddCell(new Cell()
-                    .Add(new Paragraph("4)เรียนผู้ช่วยอธิการบดีฝ่ายกิจการนิสิต ฯ\n" +
-                    "เพื่อโปรดพิจารณา\n\n\n")
-                        .SetFont(thaiFont).SetMultipliedLeading(1.0f))
+                    //         ช่องที่ 2(2 ลายเซ็น ซ้าย - ขวา และอยู่ตรงกลาง)
+                    Table innerTable = new Table(2); // ตารางย่อย 2 คอลัมน์
+                    innerTable.SetWidth(UnitValue.CreatePercentValue(100));
 
-                    .Add(new Paragraph($"{approve3 ?? "N/A"}")
-                        .SetFont(thaiFont).SetMultipliedLeading(1.0f)
-                        .SetTextAlignment(TextAlignment.CENTER))
-                    .Add(new Paragraph("ผู้ช่วยอธิการบดีฝ่ายเทคโนโลยีสารสนเทศ กายภาพ และสิ่งแวดล้อม วิทยาเขตศรีราชา\r\nรักษาการแทนผู้อำนวยการสำนักงานวิทยาเขตศรีราชา\r\n")
-                        .SetFont(thaiFont).SetMultipliedLeading(1.0f)
-                        .SetTextAlignment(TextAlignment.CENTER))
-                );
-                // ช่องที่ 5
-                signTable.AddCell(new Cell()
-                    .Add(new Paragraph("5)เรียนรองอธิการบดี ฯ\n" +
-                    "เพื่อโปรดพิจารณา\n") // ใช้ \n เพื่อขึ้นบรรทัดใหม่
-                        .SetFont(thaiFont).SetMultipliedLeading(1.0f))
+                    //ลายเซ็นทางซ้าย(จัดตรงกลาง)
+                    Cell leftCell = new Cell()
+                        .SetBorder(Border.NO_BORDER) // ไม่มีเส้นขอบ
+                        .SetTextAlignment(TextAlignment.CENTER) // จัดข้อความตรงกลาง
+                        .Add(new Paragraph("ลงชื่อ .................................\n").SetFont(thaiFont).SetMultipliedLeading(1.0f))
+                        .Add(new Paragraph("\n")) // เพิ่มบรรทัดว่าง
+                        .Add(new Paragraph($"\n{approve6 ?? "N/A"}").SetFont(thaiFont).SetMultipliedLeading(1.0f))
+                        .Add(new Paragraph("หัวหน้างานบริหารกิจการนิสิตและการกีฬา").SetFont(thaiFont).SetMultipliedLeading(1.0f))
+                        .Add(new Paragraph(".../..../....").SetFont(thaiFont).SetMultipliedLeading(1.0f));
 
-                    .Add(new Paragraph($"{approve2 ?? "N/A"}")
-                        .SetFont(thaiFont).SetMultipliedLeading(1.0f)
-                        .SetTextAlignment(TextAlignment.CENTER))
-                    .Add(new Paragraph("ผู้ช่วยอธิการบดีฝ่ายกิจการนิสิต และพัฒนาอย่างยั่งยืน\r\nวิทยาเขตศรีราชา\r\n")
-                        .SetFont(thaiFont).SetMultipliedLeading(1.0f)
-                        .SetTextAlignment(TextAlignment.CENTER))
-                    .Add(new Paragraph(".../..../....")
-                        .SetFont(thaiFont).SetMultipliedLeading(1.0f)
-                        .SetTextAlignment(TextAlignment.CENTER))
-                );
+                    //ลายเซ็นทางขวา(จัดตรงกลาง)
+                    Cell rightCell = new Cell()
+                        .SetBorder(Border.NO_BORDER) // ไม่มีเส้นขอบ
+                        .SetTextAlignment(TextAlignment.CENTER) // จัดข้อความตรงกลาง
+                        .Add(new Paragraph("ลงชื่อ .................................\n").SetFont(thaiFont).SetMultipliedLeading(1.0f))
+                        .Add(new Paragraph("\n")) // เพิ่มบรรทัดว่าง
+                        .Add(new Paragraph($"\n{approve5 ?? "N/A"}").SetFont(thaiFont).SetMultipliedLeading(1.0f))
+                        .Add(new Paragraph("ผู้อำนวยการกองบริหารการศึกษาและพัฒนานิสิต").SetFont(thaiFont).SetMultipliedLeading(1.0f))
+                        .Add(new Paragraph(".../..../....").SetFont(thaiFont).SetMultipliedLeading(1.0f));
 
-                // ช่องที่ 6
-                signTable.AddCell(new Cell()
-                    .Add(new Paragraph("อนุมัติ\n\n\n")
-                        .SetFont(thaiFont).SetMultipliedLeading(1.0f).SetTextAlignment(TextAlignment.CENTER))
+                    //เพิ่มเซลล์ซ้าย - ขวาเข้าตารางย่อย
+                    innerTable.AddCell(leftCell);
+                    innerTable.AddCell(rightCell);
 
-                    .Add(new Paragraph($"{approve1 ?? "N/A"}")
-                        .SetFont(thaiFont).SetMultipliedLeading(1.0f)
-                        .SetTextAlignment(TextAlignment.CENTER))
-                    .Add(new Paragraph("รองอธิการบดีวิทยาเขตศรีราชา")
-                        .SetFont(thaiFont).SetMultipliedLeading(1.0f)
-                        .SetTextAlignment(TextAlignment.CENTER))
-                    .Add(new Paragraph(".../..../....")
-                        .SetFont(thaiFont).SetMultipliedLeading(1.0f)
-                        .SetTextAlignment(TextAlignment.CENTER))
-                );
+                    //เพิ่มตารางย่อยลงในตารางหลัก
+                    signTable.AddCell(new Cell()
+                        .SetTextAlignment(TextAlignment.LEFT) // จัดข้อความของเซลล์หลักให้อยู่ตรงกลาง
+                        .Add(new Paragraph("2) ตรวจสอบให้เป็นไปตามแผนการจัดกิจกรรม\n").SetFont(thaiFont).SetMultipliedLeading(1.0f))
+                        .Add(innerTable) // ใส่ตารางย่อยที่มี 2 คอลัมน์ (ซ้าย-ขวา)
+                    );
 
-                document.Add(signTable);
+
+
+
+                    //ช่องที่ 3
+                    signTable.AddCell(new Cell()
+                        .Add(new Paragraph("3)ตรวจสอบแผนการใช้งบประมาณ\n" +
+                        "☐ 1) เงินบำรุงกิจกรรมนิสิต      \n" +
+                        "☐ 2) เงินสะสมองค์กร          \n" +
+                        "☐ 3) แหล่งอื่นๆ รายการ...............................\n" +
+                        "\n") // ใช้ \n เพื่อขึ้นบรรทัดใหม่
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f))
+
+                        .Add(new Paragraph($"{approve4 ?? "N/A"}")
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f)
+                            .SetTextAlignment(TextAlignment.CENTER))
+                        .Add(new Paragraph("นักวิชาการเงินและบัญชี")
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f)
+                            .SetTextAlignment(TextAlignment.CENTER))
+                        .Add(new Paragraph(".../..../....")
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f)
+                            .SetTextAlignment(TextAlignment.CENTER))
+                    );
+
+                    //ช่องที่ 4
+                    signTable.AddCell(new Cell()
+                        .Add(new Paragraph("4)เรียนผู้ช่วยอธิการบดีฝ่ายกิจการนิสิต ฯ\n" +
+                        "เพื่อโปรดพิจารณา\n\n\n")
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f))
+
+                        .Add(new Paragraph($"{approve3 ?? "N/A"}")
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f)
+                            .SetTextAlignment(TextAlignment.CENTER))
+                        .Add(new Paragraph("ผู้ช่วยอธิการบดีฝ่ายเทคโนโลยีสารสนเทศ กายภาพ และสิ่งแวดล้อม วิทยาเขตศรีราชา\r\nรักษาการแทนผู้อำนวยการสำนักงานวิทยาเขตศรีราชา\r\n")
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f)
+                            .SetTextAlignment(TextAlignment.CENTER))
+                    );
+                    //ช่องที่ 5
+                    signTable.AddCell(new Cell()
+                        .Add(new Paragraph("5)เรียนรองอธิการบดี ฯ\n" +
+                        "เพื่อโปรดพิจารณา\n") // ใช้ \n เพื่อขึ้นบรรทัดใหม่
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f))
+                        .Add(new Paragraph("\n")) // เพิ่มบรรทัดว่าง
+                        .Add(new Paragraph($"{approve2 ?? "N/A"}")
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f)
+                            .SetTextAlignment(TextAlignment.CENTER))
+                        .Add(new Paragraph("ผู้ช่วยอธิการบดีฝ่ายกิจการนิสิต และพัฒนาอย่างยั่งยืน\r\nวิทยาเขตศรีราชา\r\n")
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f)
+                            .SetTextAlignment(TextAlignment.CENTER))
+                        .Add(new Paragraph(".../..../....")
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f)
+                            .SetTextAlignment(TextAlignment.CENTER))
+                    );
+
+                    //ช่องที่ 6
+                    signTable.AddCell(new Cell()
+                        .Add(new Paragraph("อนุมัติ\n\n\n")
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f).SetTextAlignment(TextAlignment.CENTER))
+                        .Add(new Paragraph("\n")) // เพิ่มบรรทัดว่าง
+                        .Add(new Paragraph($"\n {approve1 ?? "N/A"}")
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f)
+                            .SetTextAlignment(TextAlignment.CENTER))
+                        .Add(new Paragraph("รองอธิการบดีวิทยาเขตศรีราชา")
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f)
+                            .SetTextAlignment(TextAlignment.CENTER))
+                        .Add(new Paragraph(".../..../....")
+                            .SetFont(thaiFont).SetMultipliedLeading(1.0f)
+                            .SetTextAlignment(TextAlignment.CENTER))
+                    );
+
+                    document.Add(signTable);
 
 
 

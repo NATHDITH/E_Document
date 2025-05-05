@@ -1,25 +1,98 @@
 ﻿@{
     Layout = null;
 }
-<h2>Login</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Login</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #74ebd5, #ACB6E5);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-@using (Html.BeginForm())
-{
-    <div>
-        <label for="username">ชื่อผู้ใช้:</label>
-        <input type="text" id="username" name="username" />
+
+        .login-container {
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            width: 350px;
+        }
+
+            .login-container h2 {
+                text-align: center;
+                margin-bottom: 20px;
+                color: #333;
+            }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+            button:hover {
+                background-color: #2980b9;
+            }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>เข้าสู่ระบบ</h2>
+
+        @using (Html.BeginForm())
+        {
+            <div>
+                <label for="username">ชื่อผู้ใช้:</label>
+                <input type="text" id="username" name="username" />
+            </div>
+
+            <div>
+                <label for="password">รหัสผ่าน:</label>
+                <input type="password" id="password" name="password" />
+            </div>
+
+            <button type="submit">Login</button>
+        }
+
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <div class="error-message">@ViewBag.ErrorMessage</div>
+        }
     </div>
-
-    <div>
-        <label for="password">รหัสผ่าน:</label>
-        <input type="password" id="password" name="password" />
-    </div>
-
-    <button type="submit">ล็อกอิน</button>
-}
-
-@if (ViewBag.ErrorMessage != null)
-{
-    <p style="color: red;">@ViewBag.ErrorMessage</p>
-}
-
+</body>
+</html>

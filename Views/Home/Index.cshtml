@@ -20,25 +20,88 @@
     };
 }
 
-<h2>รายชื่อผู้อนุมัติ</h2>
+<div class="form-container">
+    <h2>รายชื่อผู้อนุมัติ</h2>
 
-@if (TempData["Message"] != null)
-{
-    <div class="alert alert-success">@TempData["Message"]</div>
-}
-
-<form asp-action="Index" method="post">
-    @for (int i = 1; i <= 11; i++)
+    @if (TempData["Message"] != null)
     {
-        var prop = $"_{i}Approve";
-        var value = Model.GetType().GetProperty(prop)?.GetValue(Model) as string;
-        var labelText = approverTitles[i - 1]; // ดึงชื่อตำแหน่งจาก array
-
-        <div class="form-group">
-            <label>@labelText</label>
-            <input class="form-control" name="@prop" value="@value" />
-        </div>
+        <div class="alert alert-success">@TempData["Message"]</div>
     }
 
-    <button type="submit" class="btn btn-primary mt-3">บันทึก</button>
-</form>
+    <form asp-action="Index" method="post">
+        @for (int i = 1; i <= 11; i++)
+        {
+            var prop = $"_{i}Approve";
+            var value = Model.GetType().GetProperty(prop)?.GetValue(Model) as string;
+            var labelText = approverTitles[i - 1];
+
+            <div class="form-group">
+                <label>@labelText</label>
+                <input class="form-control" name="@prop" value="@value" />
+            </div>
+        }
+
+        <button type="submit" class="btn btn-primary mt-3">บันทึก</button>
+    </form>
+</div>
+
+<style>
+    body {
+        background-image: url('/images/background.jpg'); /* ตรวจสอบ path */
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .form-container {
+        background-color: rgba(255, 255, 255, 0.9);
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 30px 40px;
+        border-radius: 15px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #2c3e50;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: 600;
+        color: #34495e;
+    }
+
+    input.form-control {
+        border-radius: 8px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        transition: border-color 0.3s ease-in-out;
+    }
+
+        input.form-control:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+    button.btn-primary {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 8px;
+    }
+
+    .alert {
+        max-width: 700px;
+        margin: 20px auto;
+    }
+</style>

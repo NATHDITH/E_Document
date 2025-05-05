@@ -1,92 +1,114 @@
 ﻿@{
     Layout = "_Layout";
 }
+
 <head>
     <meta charset="UTF-8">
 </head>
 
-<h2 class="mb-4">สร้างเอกสาร ขออนุมัติหลักการ</h2>
+<h2 class="custom-header">
+    สร้างเอกสาร ขออนุมัติหลักการและวงเงินค่าใช้จ่ายโครงการ
+</h2>
+
+
 
 <form method="post" action="/Create/GeneratePrinciplesPdf" class="needs-validation" novalidate accept-charset="UTF-8">
-    <div class="mb-3">
-        <label class="form-label">เลขหนังสือ:</label>
-        <input type="text" name="DocNo" class="form-control" required />
+    <div class="card shadow p-4 bg-light">
+        
+
+        <div class="card-body">
+            <div class="mb-3">
+                <label class="form-label">เลขหนังสือออก:</label>
+                <input type="text" name="DocNo" class="form-control" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">วันที่ออกหนังสืออนุมัติ:</label>
+                <input type="date" name="CreateDate" class="form-control" required id="CreateDate" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">ชื่อโครงการ:</label>
+                <input type="text" name="ProjectName" class="form-control" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">รหัสโครงการ:</label>
+                <input type="text" name="ProjectCode" class="form-control" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">วันเริ่มเตรียมการโครงการ:</label>
+                <input type="date" name="StartDate" class="form-control" required id="StartDate" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">วันเริ่มโครงการ:</label>
+                <input type="date" name="ProjectDate" class="form-control" required id="ProjectDate" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">วันสิ้นสุดโครงการ:</label>
+                <input type="date" name="EndDate" class="form-control" required id="EndDate" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">สถานที่จัดโครงการ:</label>
+                <input type="text" name="Location" class="form-control" required />
+            </div>
+
+            
+        </div>
     </div>
 
-    <div class="mb-3">
-        <label class="form-label">วันที่ออกหนังสือ:</label>
-        <input type="date" name="CreateDate" class="form-control" required id="CreateDate" />
-    </div>
 
-    <div class="mb-3">
-        <label class="form-label">ชื่อโครงการ:</label>
-        <input type="text" name="ProjectName" class="form-control" required />
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">รหัสโครงการ:</label>
-        <input type="text" name="ProjectCode" class="form-control" required />
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">วันเริ่มเตรียมโครงการ:</label>
-        <input type="date" name="StartDate" class="form-control" required id="StartDate" />
-    </div>
-
-    
-    <div class="mb-3">
-    <label class="form-label">วันเริ่มโครงการ:</label>
-    <input type="date" name="ProjectDate" class="form-control" required id="ProjectDate" />
-</div>
-<div class="mb-3">
-    <label class="form-label">วันสิ้นสุดโครงการ:</label>
-    <input type="date" name="EndDate" class="form-control" required id="EndDate" />
-</div>
-    <div class="mb-3">
-        <label class="form-label">สถานที่โครงการ:</label>
-        <input type="text" name="Location" class="form-control" required />
-    </div>
-
-
-    <h2 class="mb-4">ส่วนการเงิน</h2>
+    <h2 class="custom-header">ส่วนการเงิน</h2>
 
 
     <!-- สำหรับค่าต่างๆ ที่เป็นตัวเลข -->
+    <div class="card shadow p-4 bg-light">
+
+
+        <div class="card-body">
     <div class="mb-3">
-        <label class="form-label">จำนวนเงินบำรุง:(บาท)</label>
+        <label class="form-label">จำนวนเงินบำรุงกิจการนิสิต:(บาท)</label>
         <input type="number" name="Maintenancemoney" class="form-control" required />
     </div>
 
     <div class="mb-3">
-        <label class="form-label">จำนวนเงินบำรุง:(ตัวอักษร)</label>
+        <label class="form-label">จำนวนเงินบำรุงกิจการนิสิต:(ตัวอักษร - ถ้วน)</label>
         <input type="text" name="Maintenancemoneytext" class="form-control" required />
     </div>
 
     <div class="mb-3">
-        <label class="form-label">จำนวนเงินสะสม:(บาท)</label>
+        <label class="form-label">จำนวนเงินสะสมองค์กร:(บาท)</label>
         <input type="number" name="Accumulatedmoney" class="form-control" required />
     </div>
 
     <div class="mb-3">
-        <label class="form-label">จำนวนเงินสะสม:(ตัวอักษร)</label>
+        <label class="form-label">จำนวนเงินสะสม:(ตัวอักษร - ถ้วน)</label>
         <input type="text" name="Accumulatedmoneytext" class="form-control" required />
     </div>
 
     <div class="mb-3">
-        <label class="form-label">จำนวนเงินอื่นๆ:(บาท)</label>
+        <label class="form-label">จำนวนเงินแหล่งอื่นๆ:(บาท)</label>
         <input type="number" name="Othermoney" class="form-control" required />
     </div>
 
     <div class="mb-3">
-        <label class="form-label">จำนวนเงินอื่นๆ:(ตัวอักษร)</label>
+        <label class="form-label">จำนวนเงินแหล่งอื่นๆ:(ตัวอักษร - ถ้วน)</label>
         <input type="text" name="Othermoneytext" class="form-control" required />
     </div>
 
-
-    <h2 class="mb-4">ส่วนชั่วโมงกิจกรรม</h2>
+    </div>
+    </div>
+    <h2 class="custom-header">ส่วนชั่วโมงกิจกรรม</h2>
 
     <!-- สำหรับตัวแปรที่เป็นตัวเลือก (เช่น สำหรับกิจกรรมต่างๆ) -->
+    <div class="card shadow p-4 bg-light">
 
+
+        <div class="card-body">
     <div class="mb-3">
         <label class="form-label">กิจกรรมมหาวิทยาลัยผู้จัด:</label>
         <input type="number" name="_1universityactivitiesSt" class="form-control" />
@@ -196,7 +218,8 @@
         <label class="form-label">กิจกรรมเพื่อสังคมอื่น ๆผู้เข้าร่วม:</label>
         <input type="number" name="_32social" class="form-control" />
     </div>
-
+        </div>
+    </div>
     <button type="submit" class="btn btn-primary">สร้าง PDF</button>
 </form>
 
@@ -272,3 +295,30 @@
 
 
 </script>
+
+<style>
+    .custom-header {
+        background-color: #66bb6a; /* เขียวอ่อน */
+        color: white;
+        padding: 10px;
+        border-radius: 6px;
+    }
+
+    .blue-input {
+        border: 1px solid #2196f3;
+        background-color: #e3f2fd;
+        color: #0d47a1;
+    }
+
+    .blue-label {
+        color: #0d47a1;
+    }
+
+    body {
+        background-image: url('/images/background4.jpg'); /* เปลี่ยน path ให้ตรง */
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+    }
+</style>
