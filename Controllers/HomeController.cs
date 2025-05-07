@@ -12,13 +12,12 @@ namespace E_Document.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly AutoPdfContext _context; // ??????????? _context
+        private readonly AutoPdfContext _context; 
 
-        // ??????? constructor ???????? _context ??
         public HomeController(ILogger<HomeController> logger, AutoPdfContext context)
         {
             _logger = logger;
-            _context = context; // ?????????????? _context
+            _context = context;
         }
         [Authorize]
         public IActionResult Index()
@@ -54,7 +53,7 @@ namespace E_Document.Controllers
 
                 if (existing != null)
                 {
-                    // ?????????????????????????
+                    
                     existing._1Approve = approver._1Approve;
                     existing._2Approve = approver._2Approve;
                     existing._3Approve = approver._3Approve;
@@ -67,19 +66,18 @@ namespace E_Document.Controllers
                     existing._10Approve = approver._10Approve;
                     existing._11Approve = approver._11Approve;
 
-                    // ???????????????
+                    
                     _context.SaveChanges();
-                    TempData["Message"] = "??????????????????!";
+                    TempData["Message"] = "Saved successfully";
                 }
             }
             else
             {
-                TempData["Message"] = "?????????????????????????!";
+                TempData["Message"] = "Fail";
             }
 
             return RedirectToAction("Index");
         }
-
 
 
         [Authorize]
@@ -89,17 +87,12 @@ namespace E_Document.Controllers
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        //public IActionResult Error()
-        //{
-        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        //}
+        
 
         public ActionResult Login()
         {
             return View();
         }
-
-
 
         
         [AllowAnonymous]
@@ -110,12 +103,12 @@ namespace E_Document.Controllers
 
             if (user != null && user.PasswordHash == password)
             {
-                // ??????? Role ???????????? Claims
+                
                 var claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Role, user.Role) // ????? Role ????????? Claim
+            new Claim(ClaimTypes.Role, user.Role) 
         };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -131,24 +124,15 @@ namespace E_Document.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            ViewBag.ErrorMessage = "????????????????????????????????";
+            ViewBag.ErrorMessage = "The user password is incorrect.";
             return View();
         }
-
 
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login");
         }
-
-
-
-
-
-
-
-
 
     }
 }

@@ -12,7 +12,6 @@ using iText.Layout.Borders;
 using iText.Layout.Properties;
 using E_Document.Models;
 using Microsoft.EntityFrameworkCore;
-using iText.Layout;  // เพิ่ม namespace นี้
 using iTextDocument = iText.Layout.Document;
 using System.Text.Json;
 using ModelDocument = E_Document.Models.Document;
@@ -31,24 +30,16 @@ namespace E_Document.Controllers
         // คอนสตรัคเตอร์ที่รับค่าจาก DI
         public CreateController(AutoPdfContext context, IWebHostEnvironment webHostEnvironment)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));  // ตรวจสอบ context ที่ส่งมา
-            _webHostEnvironment = webHostEnvironment ?? throw new ArgumentNullException(nameof(webHostEnvironment));  // ตรวจสอบ webHostEnvironment ที่ส่งมา
+            _context = context ?? throw new ArgumentNullException(nameof(context));  
+            _webHostEnvironment = webHostEnvironment ?? throw new ArgumentNullException(nameof(webHostEnvironment));
         }
 
         // ✅ ฟังก์ชันส่งเอกสาร
-
         public async Task<IActionResult> Index()
         {
             var documents = await _context.Documents.ToListAsync();
             return View(documents);
         }
-        //public IActionResult Principles()
-        //{
-        //    return View();
-        //}
-
-
-
 
         public async Task<IActionResult> Principles()
         {
@@ -98,9 +89,6 @@ namespace E_Document.Controllers
                 _31activities = model._31activities,
                 _32socialSt = model._32socialSt,
                 _32social = model._32social,
-
-
-
 
             };
 
@@ -410,49 +398,6 @@ namespace E_Document.Controllers
 
                     //เพิ่มตารางลงในเอกสาร
                     document.Add(signTable);
-
-
-
-        //            document.Add(new Paragraph("แบบเสนอโครงการกิจกรรมนิสิต\n")
-        //                    .SetFont(thaiFont)
-        //                    .SetMultipliedLeading(1.0f)
-        //                    .SetTextAlignment(TextAlignment.CENTER));
-        //            document.Add(new Paragraph("มหาวิทยาลัยเกษตรศาสตร์ วิทยาเขตศรีราชา\n")
-        //                    .SetFont(thaiFont)
-        //                    .SetMultipliedLeading(1.0f)
-        //                    .SetTextAlignment(TextAlignment.CENTER));
-
-        //            Paragraph committee2Paragraph = new Paragraph()
-        //.SetTextAlignment(TextAlignment.LEFT)
-        //.SetMultipliedLeading(1.5f) // ระยะห่างระหว่างบรรทัด
-        //.Add(new Tab()) // ขยับเลขไปที่ตำแหน่งแรก
-        //.Add(new Text("1. ").SetFont(thaiFont))
-        //.Add(new Tab()) // ขยับชื่อไปที่ตำแหน่งที่ 2
-        //.Add(new Text("ผศ.ดร.นัฎฐวิกา จันทร์ศรี").SetFont(thaiFont))
-
-        //.Add(new Text("\n"))
-        //.Add(new Tab())
-        //.Add(new Text("2. ").SetFont(thaiFont))
-        //.Add(new Tab())
-        //.Add(new Text("นายนนทกร บุญมาก").SetFont(thaiFont))
-
-        //.Add(new Text("\n"))
-        //.Add(new Tab())
-        //.Add(new Text("3. ").SetFont(thaiFont))
-        //.Add(new Tab())
-        //.Add(new Text("นายชนัญชัย ดอนมงคล").SetFont(thaiFont))
-        //;
-
-        //            //กำหนดตำแหน่งของแต่ละ Tab
-        //            committee2Paragraph.AddTabStops(
-        //                new TabStop(-100, TabAlignment.LEFT),  // เลข 1, 2, 3
-        //                new TabStop(50, TabAlignment.LEFT) // ชื่อ
-
-        //            );
-
-        //            document.Add(committeeParagraph);
-
-
 
 
                     document.Close();
@@ -1276,7 +1221,7 @@ documentDetail._32social.HasValue ? documentDetail._32social.Value : 0);
         }
 
 
-        // UploadDocument: อัปโหลดไฟล์
+        
         // UploadDocument: อัปโหลดไฟล์
         [HttpPost]
         public async Task<IActionResult> UploadDocument(IFormFile file)
@@ -1364,12 +1309,6 @@ documentDetail._32social.HasValue ? documentDetail._32social.Value : 0);
 
             return RedirectToAction("Index");
         }
-
-
-
-
-
-
 
 
     }
